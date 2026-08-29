@@ -7,47 +7,55 @@
 }
 
 :root {
-  --bg-primary: #06080d;
-  --bg-secondary: #0c1017;
-  --bg-card: #10141d;
-  --bg-input: rgba(6, 9, 15, 0.85);
-  --text-primary: #f0f6fc;
-  --text-secondary: #8b949e;
-  --text-muted: #545d68;
-  --accent-1: #00f2a6;   /* Cyber Emerald */
-  --accent-2: #00d2ff;   /* Electric Cyan */
-  --accent-3: #3b82f6;   /* Neon Blue */
-  --accent-warn: #fbbf24;
-  --accent-error: #ff4d6d;
+  --bg-primary: #0d0b09;
+  --bg-secondary: #14100c;
+  --bg-card: #191410;
+  --bg-input: #110d0a;
+  --text-primary: #faf6f0;
+  --text-secondary: #a89a8a;
+  --text-muted: #6b5e52;
+  --accent-1: #f59e0b;   /* Amber */
+  --accent-2: #fb923c;   /* Orange */
+  --accent-3: #fbbf24;   /* Amber (light) */
+  --accent-warn: #facc15;
+  --accent-error: #c2410c;
+  --accent-1-rgb: 245, 158, 11;
+  --accent-2-rgb: 251, 146, 60;
+  --accent-error-rgb: 194, 65, 12;
   --border-color: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(0, 242, 166, 0.4);
-  --shadow-glow: rgba(0, 242, 166, 0.25);
+  --border-strong: rgba(245, 158, 11, 0.4);
+  --shadow-glow: rgba(245, 158, 11, 0.28);
   --grid-line: rgba(255, 255, 255, 0.035);
-  --bg-navbar: rgba(6, 8, 13, 0.8);
+  --bg-navbar: rgba(13, 11, 9, 0.8);
   --border-input: rgba(255, 255, 255, 0.18);
-  --shadow-ambient: rgba(0, 0, 0, 0.8);
+  --shadow-ambient: rgba(0, 0, 0, 0.6);
+  --btn-text: #ffffff;
 }
 
 [data-theme="light"] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
+  --bg-primary: #fdfaf6;
+  --bg-secondary: #f7f1ea;
   --bg-card: #ffffff;
-  --bg-input: rgba(255, 255, 255, 0.95);
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --accent-1: #10b981;
-  --accent-2: #0ea5e9;
-  --accent-3: #3b82f6;
-  --accent-warn: #f59e0b;
-  --accent-error: #f43f5e;
-  --border-color: rgba(0, 0, 0, 0.08);
-  --border-strong: rgba(16, 185, 129, 0.4);
-  --shadow-glow: rgba(16, 185, 129, 0.18);
-  --grid-line: rgba(0, 0, 0, 0.04);
-  --bg-navbar: rgba(255, 255, 255, 0.75);
-  --border-input: rgba(15, 23, 42, 0.16);
-  --shadow-ambient: rgba(15, 23, 42, 0.14);
+  --bg-input: #ffffff;
+  --text-primary: #241a0f;
+  --text-secondary: #6b5a48;
+  --text-muted: #a8998a;
+  --accent-1: #d97706;   /* Amber */
+  --accent-2: #ea580c;   /* Orange */
+  --accent-3: #f59e0b;
+  --accent-warn: #ca8a04;
+  --accent-error: #9a3412;
+  --accent-1-rgb: 217, 119, 6;
+  --accent-2-rgb: 234, 88, 12;
+  --accent-error-rgb: 154, 52, 18;
+  --border-color: rgba(36, 26, 15, 0.08);
+  --border-strong: rgba(217, 119, 6, 0.35);
+  --shadow-glow: rgba(217, 119, 6, 0.15);
+  --grid-line: rgba(36, 26, 15, 0.04);
+  --bg-navbar: rgba(255, 255, 255, 0.8);
+  --border-input: rgba(36, 26, 15, 0.18);
+  --shadow-ambient: rgba(36, 26, 15, 0.12);
+  --btn-text: #ffffff;
 }
 
 body {
@@ -63,9 +71,9 @@ body {
   background-image:
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-    radial-gradient(at 0% 0%, rgba(0, 242, 166, 0.14) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(0, 210, 255, 0.14) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 60%);
+    radial-gradient(at 0% 0%, rgba(var(--accent-1-rgb), 0.14) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(var(--accent-2-rgb), 0.14) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(var(--accent-2-rgb), 0.08) 0px, transparent 60%);
   background-size: 36px 36px, 36px 36px, auto, auto, auto;
   background-attachment: fixed;
   animation: grid-drift 40s linear infinite;
@@ -199,26 +207,26 @@ body::after {
 }
 
 .navbar-username {
-  background: rgba(0, 242, 166, 0.08);
-  border: 1px solid rgba(0, 242, 166, 0.3);
+  background: rgba(var(--accent-1-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-1-rgb), 0.3);
   color: var(--accent-1);
   font-weight: 600;
   font-size: 0.85rem;
   padding: 6px 14px;
   border-radius: 9999px;
   font-family: 'JetBrains Mono', monospace;
-  box-shadow: 0 0 15px rgba(0, 242, 166, 0.15);
+  box-shadow: 0 0 15px rgba(var(--accent-1-rgb), 0.15);
   animation: glow-pulse 2.4s ease-in-out infinite;
 }
 
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 15px rgba(0, 242, 166, 0.15); }
-  50% { box-shadow: 0 0 22px rgba(0, 242, 166, 0.35); }
+  0%, 100% { box-shadow: 0 0 15px rgba(var(--accent-1-rgb), 0.15); }
+  50% { box-shadow: 0 0 22px rgba(var(--accent-1-rgb), 0.35); }
 }
 
 .btn-link {
-  background: rgba(255, 77, 109, 0.1);
-  border: 1px solid rgba(255, 77, 109, 0.25);
+  background: rgba(var(--accent-error-rgb), 0.1);
+  border: 1px solid rgba(var(--accent-error-rgb), 0.25);
   color: var(--accent-error);
   cursor: pointer;
   font-size: 0.88rem;
@@ -229,10 +237,10 @@ body::after {
 }
 
 .btn-link:hover {
-  background: rgba(255, 77, 109, 0.2);
+  background: rgba(var(--accent-error-rgb), 0.2);
   color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(255, 77, 109, 0.3);
+  box-shadow: 0 6px 16px rgba(var(--accent-error-rgb), 0.3);
 }
 
 .btn-link:active {
@@ -260,7 +268,7 @@ body::after {
 
 .nav-btn-trigger.register-btn {
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  color: #04140f;
+  color: var(--btn-text);
   font-weight: 700;
   padding: 7px 16px;
   box-shadow: 0 4px 15px var(--shadow-glow);
@@ -396,7 +404,7 @@ body::after {
   display: inline-block;
   padding: 6px 16px;
   border-radius: 9999px;
-  background: rgba(0, 242, 166, 0.08);
+  background: rgba(var(--accent-1-rgb), 0.08);
   border: 1px solid var(--border-strong);
   color: var(--accent-1);
   font-size: 0.82rem;
@@ -450,14 +458,14 @@ body::after {
 
 .btn-primary {
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  color: #04140f;
+  color: var(--btn-text);
   box-shadow: 0 8px 24px var(--shadow-glow);
 }
 
 .btn-primary:hover {
   transform: translateY(-3px);
   filter: brightness(1.1);
-  box-shadow: 0 12px 30px rgba(0, 242, 166, 0.4);
+  box-shadow: 0 12px 30px rgba(var(--accent-1-rgb), 0.4);
 }
 
 .btn-secondary {
@@ -573,7 +581,7 @@ body::after {
   align-self: flex-start;
   padding: 3px 12px;
   border-radius: 9999px;
-  background: rgba(0, 242, 166, 0.1);
+  background: rgba(var(--accent-1-rgb), 0.1);
   color: var(--accent-1);
   font-size: 0.85rem;
   text-transform: capitalize;
@@ -663,17 +671,23 @@ body::after {
 }
 
 .auth-icon {
-  width: 58px;
-  height: 58px;
+  width: 60px;
+  height: 60px;
   margin: 0 auto 18px;
-  border-radius: 16px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.7rem;
+  color: #ffffff;
   background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  box-shadow: 0 10px 28px var(--shadow-glow);
-  animation: fade-in-up 0.5s ease-out both, icon-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s both;
+  box-shadow: 0 10px 28px var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  animation: fade-in-up 0.5s ease-out both, icon-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s both,
+             icon-float 3.5s ease-in-out infinite 0.7s;
+}
+
+@keyframes icon-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(-3deg); }
 }
 
 .auth-page h1,
@@ -761,7 +775,7 @@ body::after {
 
 .eye-icon-trigger:hover {
   color: var(--accent-1);
-  background: rgba(0, 242, 166, 0.08);
+  background: rgba(var(--accent-1-rgb), 0.08);
 }
 
 .eye-icon-trigger:active {
@@ -780,7 +794,7 @@ body::after {
   border: none;
   border-radius: 12px;
   background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
-  color: #04140f;
+  color: var(--btn-text);
   font-size: 1rem;
   font-weight: 700;
   font-family: 'JetBrains Mono', monospace;
@@ -817,7 +831,7 @@ body::after {
 .auth-submit-btn:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);
-  box-shadow: 0 12px 30px rgba(0, 242, 166, 0.45);
+  box-shadow: 0 12px 30px rgba(var(--accent-1-rgb), 0.45);
 }
 
 .auth-form button:active,
@@ -851,8 +865,8 @@ body::after {
 .error-text {
   display: block;
   color: var(--accent-error);
-  background: rgba(255, 77, 109, 0.1);
-  border: 1px solid rgba(255, 77, 109, 0.3);
+  background: rgba(var(--accent-error-rgb), 0.1);
+  border: 1px solid rgba(var(--accent-error-rgb), 0.3);
   padding: 11px 16px;
   border-radius: 12px;
   font-size: 0.85rem;
@@ -914,8 +928,8 @@ body::after {
 }
 
 .modal-close-btn:hover {
-  background: rgba(255, 77, 109, 0.2);
-  border-color: rgba(255, 77, 109, 0.4);
+  background: rgba(var(--accent-error-rgb), 0.2);
+  border-color: rgba(var(--accent-error-rgb), 0.4);
   color: #ffffff;
   transform: rotate(90deg);
 }
