@@ -21,8 +21,10 @@ export default function Login({ onSuccess, onSwitchToRegister }) {
 
   return (
     <div className="auth-page">
-      <h2>Login</h2>
-      
+      <div className="auth-icon">🔐</div>
+      <h2>Welcome back</h2>
+      <p>Login karein apne dashboard tak pohanchne ke liye</p>
+
       {error && <p className="error-text">{error}</p>}
 
       <form onSubmit={handleSubmit} className="auth-form">

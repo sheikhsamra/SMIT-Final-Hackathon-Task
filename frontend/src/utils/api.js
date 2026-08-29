@@ -1,8 +1,8 @@
 import axios from "axios";
 
-// Backend ka base URL — hackathon ke din agar port change ho to bas yahan badal dena
+// Local development ke liye localhost, aur Vercel deployment ke liye environment variable use hoga
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 });
 
 // Har request ke saath agar token store hai to automatically bhej dega

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
@@ -18,31 +19,33 @@ export default function App() {
   };
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Navbar onOpenAuth={handleOpenAuth} />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home onOpenAuth={handleOpenAuth} />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </main>
-        <Footer />
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Navbar onOpenAuth={handleOpenAuth} />
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<Home onOpenAuth={handleOpenAuth} />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </main>
+          <Footer />
 
-        {/* Global Blur Backdrop Popup Modal */}
-        <AuthModal 
-          isOpen={isAuthOpen} 
-          onClose={() => setIsAuthOpen(false)} 
-          initialMode={authMode} 
-        />
-      </BrowserRouter>
-    </AuthProvider>
+          {/* Global Blur Backdrop Popup Modal */}
+          <AuthModal
+            isOpen={isAuthOpen}
+            onClose={() => setIsAuthOpen(false)}
+            initialMode={authMode}
+          />
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

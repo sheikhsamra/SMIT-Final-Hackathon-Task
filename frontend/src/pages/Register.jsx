@@ -22,7 +22,9 @@ export default function Register({ onSuccess, onSwitchToLogin }) {
 
   return (
     <div className="auth-page">
-      <h2>Register</h2>
+      <div className="auth-icon">✨</div>
+      <h2>Create account</h2>
+      <p>Chand seconds mein apna free account bana lein</p>
 
       {error && <p className="error-text">{error}</p>}
 
