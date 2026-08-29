@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-// Yeh middleware check karta hai ke request ke saath valid token hai ya nahi
+// Verifies that the request carries a valid JWT token
 export const protect = async (req, res, next) => {
   let token;
 
@@ -12,19 +12,19 @@ export const protect = async (req, res, next) => {
       req.user = await User.findById(decoded.id).select("-password");
       return next();
     } catch (error) {
-      return res.status(401).json({ message: "Token invalid ya expire ho gaya, dubara login karein" });
+      return res.status(401).json({ message: "Invalid or expired token, please log in again" });
     }
   }
 
   if (!token) {
-    return res.status(401).json({ message: "Access denied, token nahi mila" });
+    return res.status(401).json({ message: "Access denied, no token provided" });
   }
 };
 
-// Yeh middleware check karta hai ke user "admin" hai ya nahi (protect ke baad lagana hai)
+// Verifies the user has the "admin" role (use after the protect middleware)
 export const adminOnly = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
     return next();
   }
-  return res.status(403).json({ message: "Sirf admin ke liye ijazat hai" });
+  return res.status(403).json({ message: "Access restricted to admins only" });
 };

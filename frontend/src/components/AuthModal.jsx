@@ -5,7 +5,7 @@ import Register from "../pages/Register";
 export default function AuthModal({ isOpen, onClose, initialMode = "login" }) {
   const [mode, setMode] = useState(initialMode);
 
-  // Jab bhi modal dobara open ho ya initialMode change ho, mode update ho jaye
+  // Reset the mode whenever the modal reopens or initialMode changes
   useEffect(() => {
     setMode(initialMode);
   }, [isOpen, initialMode]);

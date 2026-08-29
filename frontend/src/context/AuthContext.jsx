@@ -35,5 +35,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Kisi bhi component mein "const { user, login, logout } = useAuth();" likh k use kar sakte ho
+// Use "const { user, login, logout } = useAuth();" in any component
 export const useAuth = () => useContext(AuthContext);

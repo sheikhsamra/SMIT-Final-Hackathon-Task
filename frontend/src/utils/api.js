@@ -1,11 +1,11 @@
 import axios from "axios";
 
-// Local development ke liye localhost, aur Vercel deployment ke liye environment variable use hoga
+// Uses localhost for local development, and the environment variable for Vercel deployments
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 });
 
-// Har request ke saath agar token store hai to automatically bhej dega
+// Automatically attaches the stored token to every request, if present
 api.interceptors.request.use((config) => {
   const user = JSON.parse(localStorage.getItem("user"));
   if (user?.token) {

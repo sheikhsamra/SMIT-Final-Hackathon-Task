@@ -1,18 +1,18 @@
 # Hackathon MERN Starter
 
 Ready-made MERN stack boilerplate: JWT Authentication + Navbar + Footer + Protected Routes.
-Hackathon ke din bas apna actual feature/idea isi ke andar build karna hai.
+On hackathon day, just build your actual feature/idea on top of this.
 
-## Kaise chalayen
+## Getting Started
 
 ### 1. Backend
 ```
 cd backend
 npm install
-cp .env.example .env   # phir .env mein apna MongoDB URI aur JWT_SECRET daalein
+cp .env.example .env   # then fill in your MongoDB URI and JWT_SECRET in .env
 npm run dev
 ```
-Backend `http://localhost:5000` par chalega.
+The backend will run on `http://localhost:5000`.
 
 ### 2. Frontend
 ```
@@ -20,7 +20,7 @@ cd frontend
 npm install
 npm run dev
 ```
-Frontend `http://localhost:5173` par chalega.
+The frontend will run on `http://localhost:5173`.
 
 ## Structure
 ```
@@ -39,4 +39,3 @@ frontend/
   src/pages/Home.jsx, Login.jsx, Register.jsx, Dashboard.jsx
   src/utils/api.js       -> axios instance with token auto-attach
 ```
-"# SITM-Final-Hackthon" 

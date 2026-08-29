@@ -15,7 +15,7 @@ export default function Login({ onSuccess, onSwitchToRegister }) {
       await login(email, password);
       if (onSuccess) onSuccess();
     } catch (err) {
-      setError(err.response?.data?.message || "Login fail ho gaya");
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     }
   };
 
@@ -28,7 +28,7 @@ export default function Login({ onSuccess, onSwitchToRegister }) {
         </svg>
       </div>
       <h2>Welcome back</h2>
-      <p>Login karein apne dashboard tak pohanchne ke liye</p>
+      <p>Log in to access your dashboard</p>
 
       {error && <p className="error-text">{error}</p>}
 
@@ -73,14 +73,14 @@ export default function Login({ onSuccess, onSwitchToRegister }) {
       </form>
 
       <p className="auth-switch-text">
-        Account nahi hai?{" "}
-        <a 
+        Don't have an account?{" "}
+        <a
           onClick={(e) => {
             e.preventDefault();
             if (onSwitchToRegister) onSwitchToRegister();
           }}
         >
-          Register karein
+          Register
         </a>
       </p>
     </div>

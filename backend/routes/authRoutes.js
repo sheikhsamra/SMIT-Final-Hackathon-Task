@@ -15,12 +15,12 @@ router.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({ message: "Saare fields bharen" });
+      return res.status(400).json({ message: "Please fill in all fields" });
     }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: "Is email se account pehle se bana hua hai" });
+      return res.status(400).json({ message: "An account with this email already exists" });
     }
 
     const user = await User.create({ name, email, password });
@@ -33,6 +33,12 @@ router.post("/register", async (req, res) => {
       token: generateToken(user._id),
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "An account with this email already exists" });
+    }
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ message: Object.values(error.errors)[0].message });
+    }
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -52,14 +58,14 @@ router.post("/login", async (req, res) => {
         token: generateToken(user._id),
       });
     } else {
-      res.status(401).json({ message: "Email ya password galat hai" });
+      res.status(401).json({ message: "Invalid email or password" });
     }
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
-// @route  GET /api/auth/me  (protected route, sirf logged-in user access kar sakta hai)
+// @route  GET /api/auth/me  (protected route — only accessible to logged-in users)
 router.get("/me", protect, async (req, res) => {
   res.json(req.user);
 });

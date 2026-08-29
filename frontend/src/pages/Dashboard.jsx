@@ -13,7 +13,7 @@ export default function Dashboard() {
     <div className="page">
       <div className="dashboard-header">
         <h1>Welcome back, {user?.name} 👋</h1>
-        <p>Yeh protected page hai — sirf login ke baad dikhta hai. Yahan se apna hackathon feature build karna start karein.</p>
+        <p>This is a protected page — visible only after logging in. Start building your hackathon feature from here.</p>
       </div>
 
       <div className="stats-row">

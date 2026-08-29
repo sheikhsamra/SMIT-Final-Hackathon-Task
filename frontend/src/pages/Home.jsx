@@ -5,17 +5,17 @@ const FEATURES = [
   {
     icon: "🔐",
     title: "Auth Ready",
-    desc: "JWT login, register aur protected routes pehle se wired hain.",
+    desc: "JWT login, register, and protected routes are wired up out of the box.",
   },
   {
     icon: "⚡",
     title: "MERN Stack",
-    desc: "MongoDB, Express, React aur Node — sab connect ho chuka hai.",
+    desc: "MongoDB, Express, React, and Node — all connected and ready to go.",
   },
   {
     icon: "🎨",
     title: "Themeable UI",
-    desc: "Dark/light mode toggle aur glassmorphism design system built-in.",
+    desc: "Dark/light mode toggle and a glassmorphism design system, built-in.",
   },
 ];
 
@@ -30,8 +30,8 @@ export default function Home({ onOpenAuth }) {
           Build fast, <span className="hero-highlight">ship faster</span>
         </h1>
         <p>
-          Header, Footer, Navbar aur Authentication pehle se ready hain — ab bas apna
-          actual idea/feature isi structure mein add karna hai.
+          Header, Footer, Navbar, and Authentication are ready to go — now just add
+          your actual idea or feature into this structure.
         </p>
 
         <div className="cta-group">

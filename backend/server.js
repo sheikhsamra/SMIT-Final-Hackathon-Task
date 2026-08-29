@@ -12,12 +12,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Saare auth routes yahan se milenge: /api/auth/register, /api/auth/login, /api/auth/me
+// All auth routes are mounted here: /api/auth/register, /api/auth/login, /api/auth/me
 app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hackathon backend chal raha hai 🚀");
+  res.send("Hackathon backend is running 🚀");
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Server chal raha hai port ${PORT} par`));
+app.listen(PORT, () => console.log(`✅ Server is running on port ${PORT}`));
+
+// Exporting the app is required for Vercel serverless functions
+export default app;
