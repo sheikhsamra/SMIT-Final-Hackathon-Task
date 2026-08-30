@@ -3927,6 +3927,20 @@ body::after {
     display: flex;
   }
 
+  /* The dropdown's fixed 320px width + "right: 0 relative to the bell"
+     positioning assumes the bell sits flush against the viewport's right
+     edge — on mobile the hamburger button sits to its right instead, so
+     that math pushes the dropdown left, off the edge of the screen.
+     Anchoring to the viewport instead of the bell fixes it regardless of
+     where the bell actually sits in the action row. */
+  .notification-dropdown {
+    position: fixed;
+    top: 66px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+
   .main-content {
     padding: 40px 16px;
   }
