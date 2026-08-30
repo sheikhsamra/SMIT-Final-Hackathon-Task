@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -16,6 +16,7 @@ import {
   submitReview,
   deleteTicket,
 } from "../utils/tickets";
+import { IconChevronDown } from "../components/Icons";
 
 const CATEGORIES = ["General", "Billing", "Technical", "Account", "Other"];
 const PRIORITIES = ["Low", "Medium", "High"];
@@ -52,6 +53,26 @@ export default function TicketDetail() {
   const [reviewError, setReviewError] = useState("");
 
   const isWorkerRole = user?.role === "worker" || user?.role === "admin";
+  const messagesEndRef = useRef(null);
+  const [conversationOpen, setConversationOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const seenMessageCountRef = useRef(0);
+  const conversationOpenRef = useRef(false);
+
+  useEffect(() => {
+    conversationOpenRef.current = conversationOpen;
+  }, [conversationOpen]);
+
+  const toggleConversation = () => {
+    setConversationOpen((open) => {
+      const next = !open;
+      if (next) {
+        seenMessageCountRef.current = messages.length;
+        setUnreadCount(0);
+      }
+      return next;
+    });
+  };
 
   const loadTicket = () => {
     setError("");
@@ -62,6 +83,9 @@ export default function TicketDetail() {
         setCategory(ticketData.category);
         setPriority(ticketData.priority);
         setReview(reviewData);
+        // Existing history shouldn't count as "unread" — only messages that
+        // arrive after this first load should.
+        seenMessageCountRef.current = messagesData.length;
       })
       .catch((err) => setError(err.response?.data?.message || "Could not load this ticket."));
   };
@@ -77,6 +101,11 @@ export default function TicketDetail() {
         setTicket(ticketData);
         setMessages(messagesData);
         setReview(reviewData);
+        if (conversationOpenRef.current) {
+          seenMessageCountRef.current = messagesData.length;
+        } else if (messagesData.length > seenMessageCountRef.current) {
+          setUnreadCount(messagesData.length - seenMessageCountRef.current);
+        }
       })
       .catch(() => {});
   };
@@ -87,6 +116,12 @@ export default function TicketDetail() {
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    if (conversationOpen && messagesEndRef.current) {
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+    }
+  }, [messages, conversationOpen]);
 
   const handleReply = async (e) => {
     e.preventDefault();
@@ -241,6 +276,8 @@ export default function TicketDetail() {
         </div>
       </div>
 
+      <div className="ticket-detail-layout">
+      <div className="ticket-detail-main">
       <div className="ticket-meta">
         <span>Category: {ticket.category}</span>
         <span>Customer: {ticket.customer?.name}</span>
@@ -404,51 +441,73 @@ export default function TicketDetail() {
           )}
         </div>
       )}
-
-      <div className="conversation-header">
-        <h2 className="section-title">Conversation</h2>
-        <span className="live-indicator"><span className="live-dot" />Live</span>
       </div>
-      <div className="conversation">
-        {messages.length === 0 && (
-          <p className="conversation-empty">No messages yet.</p>
-        )}
-        {messages.map((m) => (
-          <div
-            key={m._id}
-            className={`message-bubble ${m.sender?._id === user?._id ? "mine" : "theirs"}`}
-          >
-            <div className="message-meta">
-              <span className="message-sender">{m.sender?.name || "Unknown"}</span>
-              <span className="message-role">{m.senderRole}</span>
-            </div>
-            <p>{m.text}</p>
+
+      <div className={`conversation-card ticket-detail-side ${conversationOpen ? "open" : "closed"}`}>
+        <div
+          className="conversation-header"
+          onClick={toggleConversation}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggleConversation()}
+          aria-expanded={conversationOpen}
+        >
+          <h2 className="section-title">Conversation</h2>
+          <div className="conversation-header-right">
+            {!conversationOpen && unreadCount > 0 && (
+              <span className="notification-badge conversation-unread-badge">{unreadCount}</span>
+            )}
+            <span className="live-indicator"><span className="live-dot" />Live</span>
+            <span className="conversation-toggle-chevron"><IconChevronDown /></span>
           </div>
-        ))}
-      </div>
+        </div>
 
-      {isResolved || isPending || isRejected ? (
-        <p className="ticket-resolved-note">
-          {isPending && "Waiting for the worker to accept this booking before you can chat."}
-          {isRejected && "This booking was rejected. Please submit a new ticket to try another worker."}
-          {isResolved && "This ticket has been resolved. It needs to be reopened before the conversation can continue."}
-        </p>
-      ) : (
-        <form onSubmit={handleReply} className="reply-form">
-          {sendError && <p className="error-text">{sendError}</p>}
-          <textarea
-            className="field-textarea"
-            placeholder="Type your reply…"
-            value={reply}
-            onChange={(e) => setReply(e.target.value)}
-            rows={3}
-            maxLength={3000}
-          />
-          <button type="submit" className="btn-primary" disabled={sending || !reply.trim()}>
-            {sending ? "Sending…" : "Send Reply"}
-          </button>
-        </form>
-      )}
+        {conversationOpen && (
+        <>
+        <div className="conversation" ref={messagesEndRef}>
+          {messages.length === 0 && (
+            <p className="conversation-empty">No messages yet.</p>
+          )}
+          {messages.map((m) => (
+            <div
+              key={m._id}
+              className={`message-bubble ${m.sender?._id === user?._id ? "mine" : "theirs"}`}
+            >
+              <div className="message-meta">
+                <span className="message-sender">{m.sender?.name || "Unknown"}</span>
+                <span className="message-role">{m.senderRole}</span>
+              </div>
+              <p>{m.text}</p>
+            </div>
+          ))}
+        </div>
+
+        {isResolved || isPending || isRejected ? (
+          <p className="ticket-resolved-note conversation-locked-note">
+            {isPending && "Waiting for the worker to accept this booking before you can chat."}
+            {isRejected && "This booking was rejected. Please submit a new ticket to try another worker."}
+            {isResolved && "This ticket has been resolved. It needs to be reopened before the conversation can continue."}
+          </p>
+        ) : (
+          <form onSubmit={handleReply} className="reply-form">
+            {sendError && <p className="error-text">{sendError}</p>}
+            <textarea
+              className="field-textarea"
+              placeholder="Type your reply…"
+              value={reply}
+              onChange={(e) => setReply(e.target.value)}
+              rows={2}
+              maxLength={3000}
+            />
+            <button type="submit" className="btn-primary" disabled={sending || !reply.trim()}>
+              {sending ? "Sending…" : "Send Reply"}
+            </button>
+          </form>
+        )}
+        </>
+        )}
+      </div>
+      </div>
     </div>
   );
 }

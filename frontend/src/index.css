@@ -3508,6 +3508,40 @@ body::after {
   margin-top: 4px;
 }
 
+/* Ticket details on the left, the conversation pinned on the right — the
+   chat box no longer sits after a long stack of cards at the bottom of the
+   page; it lives in the space beside the header badges and stays in view
+   while the left column scrolls. */
+.ticket-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  align-items: start;
+  gap: 28px;
+  margin-top: 20px;
+}
+
+.ticket-detail-main {
+  min-width: 0;
+}
+
+.conversation-card.ticket-detail-side {
+  position: sticky;
+  top: 90px;
+  margin: 0;
+  max-width: none;
+}
+
+@media (max-width: 960px) {
+  .ticket-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .conversation-card.ticket-detail-side {
+    position: static;
+    margin-top: 8px;
+  }
+}
+
 .ticket-meta {
   display: flex;
   gap: 20px;
@@ -3691,10 +3725,72 @@ body::after {
   gap: 10px;
 }
 
+.conversation-card {
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  padding: 20px 22px;
+  margin: 20px 0 28px;
+  box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.4);
+}
+
 .conversation-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  user-select: none;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.conversation-header:hover {
+  background: rgba(var(--accent-1-rgb), 0.05);
+}
+
+/* Closed state renders nothing below the header, so its bottom
+   divider/margin would otherwise leave a dangling line at the card's edge. */
+.conversation-card.closed .conversation-header {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.conversation-header .section-title {
+  margin-bottom: 0;
+}
+
+.conversation-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.conversation-toggle-chevron {
+  display: flex;
+  color: var(--text-muted);
+  transition: transform 0.25s ease;
+}
+
+.conversation-toggle-chevron svg {
+  width: 18px;
+  height: 18px;
+}
+
+.conversation-card.open .conversation-toggle-chevron {
+  transform: rotate(180deg);
+}
+
+.conversation-unread-badge {
+  position: static;
 }
 
 .live-indicator {
@@ -3722,14 +3818,34 @@ body::after {
 }
 
 .conversation {
-  max-width: 900px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin: 20px 0 28px;
+  max-height: 420px;
+  min-height: 120px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  margin-bottom: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.conversation::-webkit-scrollbar {
+  width: 6px;
+}
+
+.conversation::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.conversation::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
 }
 
 .conversation-empty {
+  margin: auto;
   color: var(--text-muted);
   font-size: 0.9rem;
 }
@@ -3776,13 +3892,20 @@ body::after {
 
 .reply-form {
   display: flex;
-  flex-direction: column;
+  align-items: flex-end;
   gap: 12px;
-  max-width: 640px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color);
+}
+
+.reply-form .field-textarea {
+  flex: 1;
+  min-width: 0;
+  resize: none;
 }
 
 .reply-form .btn-primary {
-  align-self: flex-end;
+  flex-shrink: 0;
   opacity: 1;
 }
 
@@ -3790,6 +3913,15 @@ body::after {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+}
+
+.reply-form .error-text {
+  flex-basis: 100%;
+}
+
+.conversation-locked-note {
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color);
 }
 
 .ticket-resolved-note {
