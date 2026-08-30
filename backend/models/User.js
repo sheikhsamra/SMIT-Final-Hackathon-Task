@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema(
       enum: ["Billing", "Technical", "Account", "General", "Other", null],
       default: null,
     },
+    // A small data-URL (resized client-side before upload) — no external
+    // storage needed for a hackathon-scale user base.
+    avatar: { type: String, default: null },
   },
   { timestamps: true }
 );

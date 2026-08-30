@@ -48,6 +48,7 @@ router.post("/register", authLimiter, async (req, res) => {
       email: user.email,
       role: user.role,
       specialization: user.specialization,
+      avatar: user.avatar,
       createdAt: user.createdAt,
       token: generateToken(user._id),
     });
@@ -75,6 +76,7 @@ router.post("/login", authLimiter, async (req, res) => {
         email: user.email,
         role: user.role,
         specialization: user.specialization,
+        avatar: user.avatar,
         createdAt: user.createdAt,
         token: generateToken(user._id),
       });
@@ -89,6 +91,38 @@ router.post("/login", authLimiter, async (req, res) => {
 // @route  GET /api/auth/me  (protected route — only accessible to logged-in users)
 router.get("/me", protect, async (req, res) => {
   res.json(req.user);
+});
+
+// @route  PATCH /api/auth/profile  (update your own name and/or avatar)
+router.patch("/profile", protect, async (req, res) => {
+  try {
+    const { name, avatar } = req.body;
+
+    if (name !== undefined) {
+      if (!name.trim()) return res.status(400).json({ message: "Name cannot be empty" });
+      req.user.name = name.trim();
+    }
+    if (avatar !== undefined) {
+      if (avatar && avatar.length > 2_000_000) {
+        return res.status(400).json({ message: "Image is too large — please use a smaller photo" });
+      }
+      req.user.avatar = avatar || null;
+    }
+
+    await req.user.save();
+
+    res.json({
+      _id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      role: req.user.role,
+      specialization: req.user.specialization,
+      avatar: req.user.avatar,
+      createdAt: req.user.createdAt,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 });
 
 export default router;

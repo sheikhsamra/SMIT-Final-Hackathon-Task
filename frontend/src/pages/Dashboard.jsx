@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { getTicketStats, getTickets } from "../utils/tickets";
+import { getTicketStats, getTickets, getWorkerProfile } from "../utils/tickets";
 import DonutChart from "../components/DonutChart";
-import { IconTicket, IconInbox, IconCheckCircle, IconSparkle, IconBarChart } from "../components/Icons";
-
-const WORKER_PREVIEW = [
-  { Icon: IconInbox, title: "Assigned Tickets", desc: "Review tickets routed to you, sorted by AI-suggested priority." },
-  { Icon: IconSparkle, title: "AI Suggestions", desc: "Approve or edit the AI's category, priority, and summary before saving." },
-  { Icon: IconBarChart, title: "Resolve & Track", desc: "Reply, update status, and close tickets with a resolution note." },
-];
+import ProfileCard from "../components/ProfileCard";
+import { IconTicket, IconInbox, IconCheckCircle, IconSparkle } from "../components/Icons";
 
 const STATUS_COLORS = {
   New: "var(--status-new)",
@@ -25,36 +20,96 @@ export default function Dashboard() {
   const isWorker = user?.role === "worker" || user?.role === "admin";
   const [stats, setStats] = useState(null);
   const [tickets, setTickets] = useState(null);
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    if (!isWorker) {
-      const load = () => {
-        getTicketStats().then(setStats).catch(() => {});
-        getTickets().then(setTickets).catch(() => {});
-      };
+    if (isWorker) {
+      if (!user?._id) return;
+      const load = () => getWorkerProfile(user._id).then(setProfile).catch(() => {});
       load();
       const interval = setInterval(load, 6000);
       return () => clearInterval(interval);
     }
+
+    const load = () => {
+      getTicketStats().then(setStats).catch(() => {});
+      getTickets().then(setTickets).catch(() => {});
+    };
+    load();
+    const interval = setInterval(load, 6000);
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isWorker, user?._id]);
 
   if (isWorker) {
     return (
       <div className="page">
         <div className="dashboard-header">
           <h1>Welcome back, {user?.name} 👋</h1>
-          <p>This is your worker workspace. Tickets assigned to you will appear here once ticket management goes live.</p>
+          <p>Your profile, performance, and customer reviews.</p>
         </div>
-        <h2 className="section-title">Coming Up</h2>
-        <div className="features-grid">
-          {WORKER_PREVIEW.map((a, i) => (
-            <div className="feature-card" key={a.title} style={{ animationDelay: `${0.1 * i}s` }}>
-              <span className="feature-icon"><a.Icon /></span>
-              <h3>{a.title}</h3>
-              <p>{a.desc}</p>
+
+        <div className="vivid-stats-row">
+          <div className="vivid-card c-teal">
+            <span className="vivid-card-icon"><IconCheckCircle /></span>
+            <div className="vivid-card-value">{profile ? profile.resolvedCount : "—"}</div>
+            <div className="vivid-card-label">Tickets Completed</div>
+          </div>
+          <div className="vivid-card c-amber">
+            <span className="vivid-card-icon"><IconSparkle /></span>
+            <div className="vivid-card-value">{profile?.avgRating ?? "—"}</div>
+            <div className="vivid-card-label">Average Rating</div>
+          </div>
+          <div className="vivid-card c-blue">
+            <span className="vivid-card-icon"><IconInbox /></span>
+            <div className="vivid-card-value">{profile ? profile.reviewCount : "—"}</div>
+            <div className="vivid-card-label">Reviews Received</div>
+          </div>
+        </div>
+
+        <div className="dashboard-grid">
+          <div className="dashboard-main">
+            <h2 className="section-title">Recent Reviews</h2>
+
+            {profile && profile.reviews.length === 0 && (
+              <div className="empty-state">
+                <span className="empty-state-icon">⭐</span>
+                <p>No reviews yet — customers can rate you after you finish a ticket.</p>
+              </div>
+            )}
+
+            {profile && profile.reviews.length > 0 && (
+              <div>
+                {profile.reviews.map((r) => (
+                  <div className="review-card" key={r._id}>
+                    <div className="review-card-title">{r.customer?.name || "Customer"}</div>
+                    <div className="star-display">
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <span key={n} className={n <= r.rating ? "star filled" : "star"}>★</span>
+                      ))}
+                    </div>
+                    {r.comment && <p className="review-comment">"{r.comment}"</p>}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="cta-group dashboard-cta">
+              <Link to="/worker" className="btn-primary">Go to Worker Dashboard</Link>
             </div>
-          ))}
+          </div>
+
+          <div className="dashboard-sidebar">
+            <ProfileCard
+              extraMeta={
+                profile?.specialization && (
+                  <div className="profile-meta" style={{ borderTop: "none", paddingTop: 0, marginTop: 4 }}>
+                    Specializes in {profile.specialization}
+                  </div>
+                )
+              }
+            />
+          </div>
         </div>
       </div>
     );
@@ -122,15 +177,7 @@ export default function Dashboard() {
         </div>
 
         <div className="dashboard-sidebar">
-          <div className="sidebar-card profile-card">
-            <div className="profile-avatar">{user?.name?.charAt(0).toUpperCase()}</div>
-            <div className="profile-name">{user?.name}</div>
-            <div className="profile-email">{user?.email}</div>
-            <span className="stat-badge">{user?.role}</span>
-            <div className="profile-meta">
-              Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
-            </div>
-          </div>
+          <ProfileCard />
 
           {stats && stats.total > 0 && (
             <div className="sidebar-card">

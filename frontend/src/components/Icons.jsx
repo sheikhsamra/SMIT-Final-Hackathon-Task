@@ -75,6 +75,20 @@ export const IconClock = () => (
   </svg>
 );
 
+export const IconCamera = () => (
+  <svg {...base}>
+    <path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" />
+    <circle cx="12" cy="13" r="3.5" />
+  </svg>
+);
+
+export const IconPencil = () => (
+  <svg {...base}>
+    <path d="M12 20h9" />
+    <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+  </svg>
+);
+
 export const IconHourglass = () => (
   <svg {...base}>
     <path d="M6 3h12" />

@@ -32,7 +32,7 @@ app.use(
       : {}
   )
 );
-app.use(express.json());
+app.use(express.json({ limit: "3mb" }));
 app.use(apiLimiter);
 
 // All auth routes are mounted here: /api/auth/register, /api/auth/login, /api/auth/me

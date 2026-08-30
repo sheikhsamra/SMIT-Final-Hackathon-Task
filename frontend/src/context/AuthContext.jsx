@@ -28,8 +28,18 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  // Updates the logged-in user's own name and/or avatar. Keeps the existing
+  // token (the backend response doesn't include one) and merges the rest.
+  const updateProfile = async (fields) => {
+    const { data } = await api.patch("/auth/profile", fields);
+    const updated = { ...user, ...data };
+    localStorage.setItem("user", JSON.stringify(updated));
+    setUser(updated);
+    return updated;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );
