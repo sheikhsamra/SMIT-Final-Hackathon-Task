@@ -48,6 +48,7 @@ router.post("/register", authLimiter, async (req, res) => {
       email: user.email,
       role: user.role,
       specialization: user.specialization,
+      createdAt: user.createdAt,
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -74,6 +75,7 @@ router.post("/login", authLimiter, async (req, res) => {
         email: user.email,
         role: user.role,
         specialization: user.specialization,
+        createdAt: user.createdAt,
         token: generateToken(user._id),
       });
     } else {
