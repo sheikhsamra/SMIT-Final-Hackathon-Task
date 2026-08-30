@@ -30,15 +30,15 @@ export default function Navbar({ onOpenAuth }) {
         <NavLink to="/about" className={({ isActive }) => (isActive ? "active" : "")}>
           About
         </NavLink>
-        {user && (
-          <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
-            Dashboard
-          </NavLink>
-        )}
         {user?.role === "customer" && (
-          <NavLink to="/tickets" className={({ isActive }) => (isActive ? "active" : "")}>
-            My Tickets
-          </NavLink>
+          <>
+            <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
+              Dashboard
+            </NavLink>
+            <NavLink to="/tickets" className={({ isActive }) => (isActive ? "active" : "")}>
+              My Tickets
+            </NavLink>
+          </>
         )}
         {user?.role === "admin" && (
           <NavLink to="/admin" className={({ isActive }) => (isActive ? "active" : "")}>

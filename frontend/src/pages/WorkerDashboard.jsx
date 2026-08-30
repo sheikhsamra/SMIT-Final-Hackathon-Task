@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getTickets, getTicketStats, getWorkerProfile } from "../utils/tickets";
 import DonutChart from "../components/DonutChart";
+import ProfileCard from "../components/ProfileCard";
 import { IconTicket, IconInbox, IconClock, IconCheckCircle, IconHourglass } from "../components/Icons";
 
 const STATUS_FILTERS = ["All", "New", "Pending", "Assigned", "In Progress", "Resolved", "Rejected"];
@@ -141,6 +142,16 @@ export default function WorkerDashboard() {
         </div>
 
         <div className="dashboard-sidebar">
+          <ProfileCard
+            extraMeta={
+              profile?.specialization && (
+                <div className="profile-meta" style={{ borderTop: "none", paddingTop: 0, marginTop: 4 }}>
+                  Specializes in {profile.specialization}
+                </div>
+              )
+            }
+          />
+
           {stats && stats.total > 0 && (
             <div className="sidebar-card">
               <h3>Status Breakdown</h3>
