@@ -5,6 +5,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { WarningsProvider } from "./context/WarningsContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
 import AuthModal from "./components/AuthModal";
 import ChatWidget from "./components/ChatWidget";
 import WarningsModal from "./components/WarningsModal";
@@ -44,6 +45,7 @@ export default function App() {
       <AuthProvider>
         <WarningsProvider>
           <BrowserRouter>
+            <ScrollToTop />
             <Navbar onOpenAuth={handleOpenAuth} />
             <main className="main-content">
               <Suspense fallback={<RouteFallback />}>
