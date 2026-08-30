@@ -141,19 +141,6 @@ export default function WorkerDashboard() {
         </div>
 
         <div className="dashboard-sidebar">
-          <div className="sidebar-card profile-card">
-            <div className="profile-avatar">{user?.name?.charAt(0).toUpperCase()}</div>
-            <div className="profile-name">{user?.name}</div>
-            <div className="profile-email">{user?.email}</div>
-            <span className="stat-badge">{user?.role}</span>
-            {profile?.specialization && (
-              <div className="profile-meta">Specializes in {profile.specialization}</div>
-            )}
-            <div className="profile-meta">
-              Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
-            </div>
-          </div>
-
           {stats && stats.total > 0 && (
             <div className="sidebar-card">
               <h3>Status Breakdown</h3>
