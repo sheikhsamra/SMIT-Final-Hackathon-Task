@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getTickets, getTicketStats } from "../utils/tickets";
 import DonutChart from "../components/DonutChart";
+import { IconTicket, IconInbox, IconClock, IconCheckCircle } from "../components/Icons";
 
 const STATUS_FILTERS = ["All", "New", "Pending", "Assigned", "In Progress", "Resolved", "Rejected"];
 const PRIORITY_FILTERS = ["All", "High", "Medium", "Low"];
@@ -52,20 +53,32 @@ export default function WorkerDashboard() {
 
       <div className="stats-row">
         <div className="stat-card">
-          <span className="stat-label">Total</span>
-          <span className="stat-value">{stats ? stats.total : "—"}</span>
+          <span className="stat-icon"><IconTicket /></span>
+          <div className="stat-card-body">
+            <span className="stat-label">Total</span>
+            <span className="stat-value">{stats ? stats.total : "—"}</span>
+          </div>
         </div>
         <div className="stat-card">
-          <span className="stat-label">Unassigned (New)</span>
-          <span className="stat-value">{stats ? stats.byStatus?.New || 0 : "—"}</span>
+          <span className="stat-icon" style={{ background: "rgba(var(--status-new-rgb), 0.14)", color: "var(--status-new)" }}><IconInbox /></span>
+          <div className="stat-card-body">
+            <span className="stat-label">Unassigned (New)</span>
+            <span className="stat-value">{stats ? stats.byStatus?.New || 0 : "—"}</span>
+          </div>
         </div>
         <div className="stat-card">
-          <span className="stat-label">In Progress</span>
-          <span className="stat-value">{stats ? stats.byStatus?.["In Progress"] || 0 : "—"}</span>
+          <span className="stat-icon" style={{ background: "rgba(var(--status-progress-rgb), 0.14)", color: "var(--status-progress)" }}><IconClock /></span>
+          <div className="stat-card-body">
+            <span className="stat-label">In Progress</span>
+            <span className="stat-value">{stats ? stats.byStatus?.["In Progress"] || 0 : "—"}</span>
+          </div>
         </div>
         <div className="stat-card">
-          <span className="stat-label">Resolved</span>
-          <span className="stat-value">{stats ? stats.byStatus?.Resolved || 0 : "—"}</span>
+          <span className="stat-icon" style={{ background: "rgba(var(--status-resolved-rgb), 0.14)", color: "var(--status-resolved)" }}><IconCheckCircle /></span>
+          <div className="stat-card-body">
+            <span className="stat-label">Resolved</span>
+            <span className="stat-value">{stats ? stats.byStatus?.Resolved || 0 : "—"}</span>
+          </div>
         </div>
       </div>
 

@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getTicketStats } from "../utils/tickets";
+import { IconMail, IconBadge, IconCalendar, IconTicket, IconInbox, IconCheckCircle, IconSparkle, IconBarChart } from "../components/Icons";
 
 const WORKER_PREVIEW = [
-  { icon: "📥", title: "Assigned Tickets", desc: "Review tickets routed to you, sorted by AI-suggested priority." },
-  { icon: "🤖", title: "AI Suggestions", desc: "Approve or edit the AI's category, priority, and summary before saving." },
-  { icon: "📊", title: "Resolve & Track", desc: "Reply, update status, and close tickets with a resolution note." },
+  { Icon: IconInbox, title: "Assigned Tickets", desc: "Review tickets routed to you, sorted by AI-suggested priority." },
+  { Icon: IconSparkle, title: "AI Suggestions", desc: "Approve or edit the AI's category, priority, and summary before saving." },
+  { Icon: IconBarChart, title: "Resolve & Track", desc: "Reply, update status, and close tickets with a resolution note." },
 ];
 
 export default function Dashboard() {
@@ -34,18 +35,27 @@ export default function Dashboard() {
 
       <div className="stats-row">
         <div className="stat-card">
-          <span className="stat-label">Account</span>
-          <span className="stat-value">{user?.email}</span>
+          <span className="stat-icon"><IconMail /></span>
+          <div className="stat-card-body">
+            <span className="stat-label">Account</span>
+            <span className="stat-value">{user?.email}</span>
+          </div>
         </div>
         <div className="stat-card">
-          <span className="stat-label">Role</span>
-          <span className="stat-value stat-badge">{user?.role}</span>
+          <span className="stat-icon"><IconBadge /></span>
+          <div className="stat-card-body">
+            <span className="stat-label">Role</span>
+            <span className="stat-value stat-badge">{user?.role}</span>
+          </div>
         </div>
         <div className="stat-card">
-          <span className="stat-label">Member since</span>
-          <span className="stat-value">
-            {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
-          </span>
+          <span className="stat-icon"><IconCalendar /></span>
+          <div className="stat-card-body">
+            <span className="stat-label">Member since</span>
+            <span className="stat-value">
+              {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -54,18 +64,27 @@ export default function Dashboard() {
           <h2 className="section-title">Your Tickets</h2>
           <div className="stats-row">
             <div className="stat-card">
-              <span className="stat-label">Total</span>
-              <span className="stat-value">{stats ? stats.total : "—"}</span>
+              <span className="stat-icon"><IconTicket /></span>
+              <div className="stat-card-body">
+                <span className="stat-label">Total</span>
+                <span className="stat-value">{stats ? stats.total : "—"}</span>
+              </div>
             </div>
             <div className="stat-card">
-              <span className="stat-label">Open</span>
-              <span className="stat-value">
-                {stats ? stats.total - (stats.byStatus?.Resolved || 0) : "—"}
-              </span>
+              <span className="stat-icon" style={{ background: "rgba(var(--status-new-rgb), 0.14)", color: "var(--status-new)" }}><IconInbox /></span>
+              <div className="stat-card-body">
+                <span className="stat-label">Open</span>
+                <span className="stat-value">
+                  {stats ? stats.total - (stats.byStatus?.Resolved || 0) : "—"}
+                </span>
+              </div>
             </div>
             <div className="stat-card">
-              <span className="stat-label">Resolved</span>
-              <span className="stat-value">{stats ? stats.byStatus?.Resolved || 0 : "—"}</span>
+              <span className="stat-icon" style={{ background: "rgba(var(--status-resolved-rgb), 0.14)", color: "var(--status-resolved)" }}><IconCheckCircle /></span>
+              <div className="stat-card-body">
+                <span className="stat-label">Resolved</span>
+                <span className="stat-value">{stats ? stats.byStatus?.Resolved || 0 : "—"}</span>
+              </div>
             </div>
           </div>
 
@@ -82,7 +101,7 @@ export default function Dashboard() {
           <div className="features-grid">
             {WORKER_PREVIEW.map((a, i) => (
               <div className="feature-card" key={a.title} style={{ animationDelay: `${0.1 * i}s` }}>
-                <span className="feature-icon">{a.icon}</span>
+                <span className="feature-icon"><a.Icon /></span>
                 <h3>{a.title}</h3>
                 <p>{a.desc}</p>
               </div>

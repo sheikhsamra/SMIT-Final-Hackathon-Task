@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
   getTicket,
@@ -14,17 +14,21 @@ import {
   rejectTicket,
   getTicketReview,
   submitReview,
+  deleteTicket,
 } from "../utils/tickets";
 
 const CATEGORIES = ["General", "Billing", "Technical", "Account", "Other"];
 const PRIORITIES = ["Low", "Medium", "High"];
+const DELETABLE_STATUSES = ["New", "Pending"];
 
 export default function TicketDetail() {
   const { id } = useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [ticket, setTicket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   const [reply, setReply] = useState("");
   const [sending, setSending] = useState(false);
@@ -151,6 +155,18 @@ export default function TicketDetail() {
     if (ticket.aiSuggestion.priority) setPriority(ticket.aiSuggestion.priority);
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm("Delete this ticket? This cannot be undone.")) return;
+    setDeleting(true);
+    try {
+      await deleteTicket(id);
+      navigate("/tickets");
+    } catch (err) {
+      setActionError(err.response?.data?.message || "Could not delete this ticket.");
+      setDeleting(false);
+    }
+  };
+
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     setReviewSubmitting(true);
@@ -205,6 +221,8 @@ export default function TicketDetail() {
   const canManage = isWorkerRole && (user.role === "admin" || !ticket.assignedWorker || isMine);
   const canManageNow = canManage && !isPending && !isResolved && !isRejected;
   const isMyResolvedTicket = isResolved && user?.role === "customer" && ticket.customer?._id === user?._id;
+  const isMyTicket = user?.role === "customer" && ticket.customer?._id === user?._id;
+  const canDelete = isMyTicket && DELETABLE_STATUSES.includes(ticket.status);
 
   return (
     <div className="page">
@@ -220,6 +238,11 @@ export default function TicketDetail() {
         <div className="ticket-card-badges">
           <span className="badge-priority" data-priority={ticket.priority}>{ticket.priority}</span>
           <span className="badge-status" data-status={ticket.status}>{ticket.status}</span>
+          {canDelete && (
+            <button type="button" className="btn-secondary reject-btn" onClick={handleDelete} disabled={deleting}>
+              {deleting ? "Deleting…" : "🗑️ Delete"}
+            </button>
+          )}
         </div>
       </div>
 

@@ -162,6 +162,32 @@ router.get("/:id", protect, async (req, res) => {
   }
 });
 
+// @route  DELETE /api/tickets/:id  (customer deletes their own ticket — only
+// while it's still New/Pending, before a worker has actually started on it)
+router.delete("/:id", protect, restrictTo("customer"), async (req, res) => {
+  try {
+    const ticket = await Ticket.findById(req.params.id);
+    if (!ticket) return res.status(404).json({ message: "Ticket not found" });
+    if (ticket.customer.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "You can only delete your own tickets" });
+    }
+    if (!["New", "Pending"].includes(ticket.status)) {
+      return res.status(400).json({ message: "This ticket can no longer be deleted once a worker has started on it." });
+    }
+
+    await Promise.all([
+      Message.deleteMany({ ticket: ticket._id }),
+      Notification.deleteMany({ ticket: ticket._id }),
+      Review.deleteOne({ ticket: ticket._id }),
+      ticket.deleteOne(),
+    ]);
+
+    res.json({ message: "Ticket deleted" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 // @route  PATCH /api/tickets/:id  (worker/admin sets category/priority manually,
 // e.g. reviewing an AI suggestion or handling the ticket when AI is unavailable)
 router.patch("/:id", protect, restrictTo("worker", "admin"), async (req, res) => {

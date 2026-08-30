@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from "../utils/notifications";
+import { IconBell, IconInbox, IconCheckCircle, IconXCircle, IconSparkle } from "./Icons";
 
 const ICON_BY_TYPE = {
-  new_booking: "📥",
-  accepted: "✅",
-  rejected: "❌",
-  completed: "🎉",
+  new_booking: IconInbox,
+  accepted: IconCheckCircle,
+  rejected: IconXCircle,
+  completed: IconSparkle,
 };
 
 export default function NotificationBell() {
@@ -53,7 +54,7 @@ export default function NotificationBell() {
         onClick={() => setOpen((o) => !o)}
         aria-label="Notifications"
       >
-        🔔
+        <IconBell />
         {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
       </button>
 
@@ -72,16 +73,19 @@ export default function NotificationBell() {
             <p className="notification-empty">No notifications yet.</p>
           )}
 
-          {notifications.map((n) => (
-            <button
-              key={n._id}
-              className={`notification-item ${n.read ? "" : "unread"}`}
-              onClick={() => handleOpenNotification(n)}
-            >
-              <span className="notification-icon">{ICON_BY_TYPE[n.type] || "🔔"}</span>
-              <span className="notification-text">{n.message}</span>
-            </button>
-          ))}
+          {notifications.map((n) => {
+            const NotifIcon = ICON_BY_TYPE[n.type] || IconBell;
+            return (
+              <button
+                key={n._id}
+                className={`notification-item ${n.read ? "" : "unread"}`}
+                onClick={() => handleOpenNotification(n)}
+              >
+                <span className="notification-icon"><NotifIcon /></span>
+                <span className="notification-text">{n.message}</span>
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

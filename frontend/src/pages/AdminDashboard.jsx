@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAdminOverview } from "../utils/admin";
 import DonutChart from "../components/DonutChart";
+import { IconUsers, IconUser, IconBriefcase, IconShield } from "../components/Icons";
 
 const STATUS_COLORS = {
   New: "var(--status-new)",
@@ -51,20 +52,32 @@ export default function AdminDashboard() {
           <h2 className="section-title">Users</h2>
           <div className="stats-row">
             <div className="stat-card">
-              <span className="stat-label">Total Users</span>
-              <span className="stat-value">{overview.users.total}</span>
+              <span className="stat-icon"><IconUsers /></span>
+              <div className="stat-card-body">
+                <span className="stat-label">Total Users</span>
+                <span className="stat-value">{overview.users.total}</span>
+              </div>
             </div>
             <div className="stat-card">
-              <span className="stat-label">Customers</span>
-              <span className="stat-value">{overview.users.byRole?.customer || 0}</span>
+              <span className="stat-icon" style={{ background: "rgba(var(--status-new-rgb), 0.14)", color: "var(--status-new)" }}><IconUser /></span>
+              <div className="stat-card-body">
+                <span className="stat-label">Customers</span>
+                <span className="stat-value">{overview.users.byRole?.customer || 0}</span>
+              </div>
             </div>
             <div className="stat-card">
-              <span className="stat-label">Workers</span>
-              <span className="stat-value">{overview.users.byRole?.worker || 0}</span>
+              <span className="stat-icon" style={{ background: "rgba(var(--accent-2-rgb), 0.14)", color: "var(--accent-2)" }}><IconBriefcase /></span>
+              <div className="stat-card-body">
+                <span className="stat-label">Workers</span>
+                <span className="stat-value">{overview.users.byRole?.worker || 0}</span>
+              </div>
             </div>
             <div className="stat-card">
-              <span className="stat-label">Admins</span>
-              <span className="stat-value">{overview.users.byRole?.admin || 0}</span>
+              <span className="stat-icon" style={{ background: "rgba(var(--priority-medium-rgb), 0.14)", color: "var(--priority-medium)" }}><IconShield /></span>
+              <div className="stat-card-body">
+                <span className="stat-label">Admins</span>
+                <span className="stat-value">{overview.users.byRole?.admin || 0}</span>
+              </div>
             </div>
           </div>
 

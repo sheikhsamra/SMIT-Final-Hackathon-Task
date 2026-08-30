@@ -20,6 +20,11 @@ export const createTicket = async (payload) => {
   return data;
 };
 
+export const deleteTicket = async (id) => {
+  const { data } = await api.delete(`/tickets/${id}`);
+  return data;
+};
+
 export const getMessages = async (id) => {
   const { data } = await api.get(`/tickets/${id}/messages`);
   return data;

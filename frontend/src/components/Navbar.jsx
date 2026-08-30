@@ -2,6 +2,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import NotificationBell from "./NotificationBell";
+import { IconSun, IconMoon } from "./Icons";
 
 export default function Navbar({ onOpenAuth }) {
   const { user, logout } = useAuth();
@@ -22,6 +23,12 @@ export default function Navbar({ onOpenAuth }) {
       <div className="navbar-center">
         <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
           Home
+        </NavLink>
+        <NavLink to="/services" className={({ isActive }) => (isActive ? "active" : "")}>
+          Services
+        </NavLink>
+        <NavLink to="/about" className={({ isActive }) => (isActive ? "active" : "")}>
+          About
         </NavLink>
         {user && (
           <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
@@ -53,7 +60,7 @@ export default function Navbar({ onOpenAuth }) {
           title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         >
           <span key={theme} className="theme-icon">
-            {theme === "dark" ? "🌙" : "☀️"}
+            {theme === "dark" ? <IconMoon /> : <IconSun />}
           </span>
         </button>
         {user ? (

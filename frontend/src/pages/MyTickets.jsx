@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getTickets } from "../utils/tickets";
+import { getTickets, deleteTicket } from "../utils/tickets";
+
+const DELETABLE_STATUSES = ["New", "Pending"];
 
 export default function MyTickets() {
   const [tickets, setTickets] = useState(null);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     getTickets()
@@ -19,6 +22,22 @@ export default function MyTickets() {
     }, 6000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleDelete = async (e, ticketId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!window.confirm("Delete this ticket? This cannot be undone.")) return;
+
+    setDeletingId(ticketId);
+    try {
+      await deleteTicket(ticketId);
+      setTickets((prev) => prev.filter((t) => t._id !== ticketId));
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not delete this ticket.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="page">
@@ -57,6 +76,17 @@ export default function MyTickets() {
               <div className="ticket-card-badges">
                 <span className="badge-priority" data-priority={t.priority}>{t.priority}</span>
                 <span className="badge-status" data-status={t.status}>{t.status}</span>
+                {DELETABLE_STATUSES.includes(t.status) && (
+                  <button
+                    type="button"
+                    className="ticket-delete-btn"
+                    title="Delete ticket"
+                    onClick={(e) => handleDelete(e, t._id)}
+                    disabled={deletingId === t._id}
+                  >
+                    {deletingId === t._id ? "…" : "🗑️"}
+                  </button>
+                )}
               </div>
             </Link>
           ))}

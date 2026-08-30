@@ -7,6 +7,8 @@ import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
+import About from "./pages/About";
+import Services from "./pages/Services";
 import Dashboard from "./pages/Dashboard";
 import NewTicket from "./pages/NewTicket";
 import MyTickets from "./pages/MyTickets";
@@ -31,6 +33,8 @@ export default function App() {
           <main className="main-content">
             <Routes>
               <Route path="/" element={<Home onOpenAuth={handleOpenAuth} />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/services" element={<Services />} />
               <Route
                 path="/dashboard"
                 element={
