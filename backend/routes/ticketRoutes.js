@@ -16,9 +16,15 @@ const LOCKED_STATUSES = ["Resolved", "Rejected"];
 const notify = (user, ticket, type, message) =>
   Notification.create({ user, ticket: ticket._id, type, message });
 
+// Ticket refs (customer/assignedWorker) may arrive either as raw ObjectIds or
+// as populated documents (.populate("customer", ...)) depending on the route —
+// pull the id out either way so the comparison below is never comparing a
+// populated document's toString() (which is not its id) against a real id.
+const refId = (ref) => (ref?._id ? ref._id.toString() : ref?.toString());
+
 // Workers/admins see the whole ticket queue; a customer only ever sees their own.
 const canView = (user, ticket) => {
-  if (user.role === "customer") return ticket.customer.toString() === user._id.toString();
+  if (user.role === "customer") return refId(ticket.customer) === user._id.toString();
   return true;
 };
 
@@ -27,9 +33,9 @@ const canView = (user, ticket) => {
 // still unassigned, so they can pick it up), and an admin can do anything.
 const canMutate = (user, ticket) => {
   if (user.role === "admin") return true;
-  if (user.role === "customer") return ticket.customer.toString() === user._id.toString();
+  if (user.role === "customer") return refId(ticket.customer) === user._id.toString();
   if (user.role === "worker") {
-    return !ticket.assignedWorker || ticket.assignedWorker.toString() === user._id.toString();
+    return !ticket.assignedWorker || refId(ticket.assignedWorker) === user._id.toString();
   }
   return false;
 };
