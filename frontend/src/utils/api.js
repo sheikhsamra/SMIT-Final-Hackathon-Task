@@ -14,4 +14,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// A 401 means the token is missing/expired/no longer valid (e.g. the account
+// behind it no longer exists) — bounce straight to login instead of leaving
+// the user stuck on a page full of confusing "server error" messages.
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && window.location.pathname !== "/login") {
+      localStorage.removeItem("user");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
