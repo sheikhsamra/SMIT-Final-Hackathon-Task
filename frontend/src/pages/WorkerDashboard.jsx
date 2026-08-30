@@ -60,54 +60,31 @@ export default function WorkerDashboard() {
         <p>All incoming tickets, sorted by newest first. <span className="live-indicator"><span className="live-dot" />Live</span></p>
       </div>
 
-      <div className="stats-row">
-        <div className="stat-card">
-          <span className="stat-icon"><IconTicket /></span>
-          <div className="stat-card-body">
-            <span className="stat-label">Total</span>
-            <span className="stat-value">{stats ? stats.total : "—"}</span>
-          </div>
+      <div className="vivid-stats-row">
+        <div className="vivid-card c-teal">
+          <span className="vivid-card-icon"><IconTicket /></span>
+          <div className="vivid-card-value">{stats ? stats.total : "—"}</div>
+          <div className="vivid-card-label">Total Tickets</div>
         </div>
-        <div className="stat-card">
-          <span className="stat-icon" style={{ background: "rgba(var(--status-new-rgb), 0.14)", color: "var(--status-new)" }}><IconInbox /></span>
-          <div className="stat-card-body">
-            <span className="stat-label">Unassigned (New)</span>
-            <span className="stat-value">{stats ? stats.byStatus?.New || 0 : "—"}</span>
-          </div>
+        <div className="vivid-card c-blue">
+          <span className="vivid-card-icon"><IconInbox /></span>
+          <div className="vivid-card-value">{stats ? stats.byStatus?.New || 0 : "—"}</div>
+          <div className="vivid-card-label">Unassigned</div>
         </div>
-        <div className="stat-card">
-          <span className="stat-icon" style={{ background: "rgba(var(--status-pending-rgb), 0.14)", color: "var(--status-pending)" }}><IconHourglass /></span>
-          <div className="stat-card-body">
-            <span className="stat-label">Waiting on Accept</span>
-            <span className="stat-value">{stats ? stats.byStatus?.Pending || 0 : "—"}</span>
-          </div>
+        <div className="vivid-card c-violet">
+          <span className="vivid-card-icon"><IconHourglass /></span>
+          <div className="vivid-card-value">{stats ? stats.byStatus?.Pending || 0 : "—"}</div>
+          <div className="vivid-card-label">Waiting on Accept</div>
         </div>
-        <div className="stat-card">
-          <span className="stat-icon" style={{ background: "rgba(var(--status-progress-rgb), 0.14)", color: "var(--status-progress)" }}><IconClock /></span>
-          <div className="stat-card-body">
-            <span className="stat-label">In Progress</span>
-            <span className="stat-value">{stats ? stats.byStatus?.["In Progress"] || 0 : "—"}</span>
-          </div>
+        <div className="vivid-card c-amber">
+          <span className="vivid-card-icon"><IconClock /></span>
+          <div className="vivid-card-value">{stats ? stats.byStatus?.["In Progress"] || 0 : "—"}</div>
+          <div className="vivid-card-label">In Progress</div>
         </div>
-        <div className="stat-card">
-          <span className="stat-icon" style={{ background: "rgba(var(--status-resolved-rgb), 0.14)", color: "var(--status-resolved)" }}><IconCheckCircle /></span>
-          <div className="stat-card-body">
-            <span className="stat-label">Completed</span>
-            <span className="stat-value">{stats ? stats.byStatus?.Resolved || 0 : "—"}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="charts-row">
-        <div className="chart-card">
-          <h3>Ticket Status Breakdown</h3>
-          <DonutChart
-            data={Object.keys(STATUS_COLORS).map((status) => ({
-              label: status,
-              value: stats?.byStatus?.[status] || 0,
-              color: STATUS_COLORS[status],
-            }))}
-          />
+        <div className="vivid-card c-green">
+          <span className="vivid-card-icon"><IconCheckCircle /></span>
+          <div className="vivid-card-value">{stats ? stats.byStatus?.Resolved || 0 : "—"}</div>
+          <div className="vivid-card-label">Completed</div>
         </div>
       </div>
 
@@ -176,6 +153,21 @@ export default function WorkerDashboard() {
               Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
             </div>
           </div>
+
+          {stats && stats.total > 0 && (
+            <div className="sidebar-card">
+              <h3>Status Breakdown</h3>
+              <DonutChart
+                size={120}
+                thickness={14}
+                data={Object.keys(STATUS_COLORS).map((status) => ({
+                  label: status,
+                  value: stats.byStatus?.[status] || 0,
+                  color: STATUS_COLORS[status],
+                }))}
+              />
+            </div>
+          )}
 
           <div className="sidebar-card">
             <h3>Your Rating</h3>
