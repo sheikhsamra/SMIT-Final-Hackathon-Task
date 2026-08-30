@@ -15,6 +15,15 @@ connectDB();
 
 const app = express();
 
+// Vercel (like any reverse proxy) sits in front of this app, so Express only
+// ever sees the proxy's own connection IP unless told to trust its
+// X-Forwarded-For header. Without this, express-rate-limit either buckets
+// every visitor under the same misdetected "IP" (so one person's requests
+// exhaust the whole app's shared login/register quota for everyone) or
+// throws its own validation error outright — both look like "registration
+// just doesn't work" for anyone but whoever hit it first.
+app.set("trust proxy", 1);
+
 // CLIENT_URL can be a comma-separated list of allowed origins in production.
 // Left unset, every origin is allowed — fine for local development/demos.
 const allowedOrigins = process.env.CLIENT_URL?.split(",").map((o) => o.trim());
