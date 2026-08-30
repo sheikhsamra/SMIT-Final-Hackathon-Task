@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getTickets, getTicketStats } from "../utils/tickets";
+import { useAuth } from "../context/AuthContext";
+import { getTickets, getTicketStats, getWorkerProfile } from "../utils/tickets";
 import DonutChart from "../components/DonutChart";
 import { IconTicket, IconInbox, IconClock, IconCheckCircle, IconHourglass } from "../components/Icons";
 
@@ -17,26 +18,34 @@ const STATUS_COLORS = {
 };
 
 export default function WorkerDashboard() {
+  const { user } = useAuth();
   const [tickets, setTickets] = useState(null);
   const [stats, setStats] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
 
   useEffect(() => {
+    const loadProfile = () => {
+      if (user?._id) getWorkerProfile(user._id).then(setProfile).catch(() => {});
+    };
     getTickets()
       .then(setTickets)
       .catch((err) => setError(err.response?.data?.message || "Could not load tickets."));
     getTicketStats().then(setStats).catch(() => {});
+    loadProfile();
 
-    // Poll so a new ticket, claim, or status change from another worker shows
-    // up here without a manual refresh. Silent on failure.
+    // Poll so a new ticket, claim, status change, or new review shows up here
+    // without a manual refresh. Silent on failure.
     const interval = setInterval(() => {
       getTickets().then(setTickets).catch(() => {});
       getTicketStats().then(setStats).catch(() => {});
+      loadProfile();
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?._id]);
 
   const filtered = (tickets || []).filter(
     (t) =>
@@ -102,54 +111,110 @@ export default function WorkerDashboard() {
         </div>
       </div>
 
-      <div className="ticket-filters">
-        <select className="field-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-          {STATUS_FILTERS.map((s) => (
-            <option key={s} value={s}>{s === "All" ? "All statuses" : s}</option>
-          ))}
-        </select>
-        <select className="field-select" value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}>
-          {PRIORITY_FILTERS.map((p) => (
-            <option key={p} value={p}>{p === "All" ? "All priorities" : p}</option>
-          ))}
-        </select>
+      <div className="dashboard-grid">
+        <div className="dashboard-main">
+          <div className="ticket-filters">
+            <select className="field-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+              {STATUS_FILTERS.map((s) => (
+                <option key={s} value={s}>{s === "All" ? "All statuses" : s}</option>
+              ))}
+            </select>
+            <select className="field-select" value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}>
+              {PRIORITY_FILTERS.map((p) => (
+                <option key={p} value={p}>{p === "All" ? "All priorities" : p}</option>
+              ))}
+            </select>
+          </div>
+
+          {error && <p className="error-text">{error}</p>}
+
+          {!tickets && !error && (
+            <div className="spinner-wrap">
+              <div className="spinner" />
+            </div>
+          )}
+
+          {tickets && filtered.length === 0 && (
+            <div className="empty-state">
+              <span className="empty-state-icon">📭</span>
+              <p>No tickets match these filters.</p>
+            </div>
+          )}
+
+          {tickets && filtered.length > 0 && (
+            <div className="ticket-list">
+              {filtered.map((t) => (
+                <Link to={`/tickets/${t._id}`} className="ticket-card" key={t._id}>
+                  <div className="ticket-card-main">
+                    <span className="ticket-number">
+                      {t.ticketNumber} · {t.customer?.name || "Unknown customer"}
+                    </span>
+                    <h3>{t.subject}</h3>
+                    {!t.assignedWorker && <span className="unassigned-tag">Unassigned</span>}
+                    {t.assignedWorker && <span className="ticket-number">Worker: {t.assignedWorker.name}</span>}
+                  </div>
+                  <div className="ticket-card-badges">
+                    <span className="badge-priority" data-priority={t.priority}>{t.priority}</span>
+                    <span className="badge-status" data-status={t.status}>{t.status}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="dashboard-sidebar">
+          <div className="sidebar-card profile-card">
+            <div className="profile-avatar">{user?.name?.charAt(0).toUpperCase()}</div>
+            <div className="profile-name">{user?.name}</div>
+            <div className="profile-email">{user?.email}</div>
+            <span className="stat-badge">{user?.role}</span>
+            {profile?.specialization && (
+              <div className="profile-meta">Specializes in {profile.specialization}</div>
+            )}
+            <div className="profile-meta">
+              Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
+            </div>
+          </div>
+
+          <div className="sidebar-card">
+            <h3>Your Rating</h3>
+            {profile?.reviewCount ? (
+              <>
+                <div className="star-display">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <span key={n} className={n <= Math.round(profile.avgRating) ? "star filled" : "star"}>★</span>
+                  ))}
+                </div>
+                <p className="profile-meta" style={{ marginTop: 8, paddingTop: 0, border: "none" }}>
+                  {profile.avgRating} average from {profile.reviewCount} review{profile.reviewCount === 1 ? "" : "s"} · {profile.resolvedCount} completed
+                </p>
+              </>
+            ) : (
+              <p className="profile-meta" style={{ paddingTop: 0, border: "none" }}>
+                No reviews yet — customers can rate you after you finish a ticket.
+              </p>
+            )}
+          </div>
+
+          {profile?.reviews?.length > 0 && (
+            <div className="sidebar-card">
+              <h3>Recent Reviews</h3>
+              {profile.reviews.map((r) => (
+                <div className="review-card" key={r._id}>
+                  <div className="review-card-title">{r.customer?.name || "Customer"}</div>
+                  <div className="star-display">
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <span key={n} className={n <= r.rating ? "star filled" : "star"}>★</span>
+                    ))}
+                  </div>
+                  {r.comment && <p className="review-comment">"{r.comment}"</p>}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-
-      {error && <p className="error-text">{error}</p>}
-
-      {!tickets && !error && (
-        <div className="spinner-wrap">
-          <div className="spinner" />
-        </div>
-      )}
-
-      {tickets && filtered.length === 0 && (
-        <div className="empty-state">
-          <span className="empty-state-icon">📭</span>
-          <p>No tickets match these filters.</p>
-        </div>
-      )}
-
-      {tickets && filtered.length > 0 && (
-        <div className="ticket-list">
-          {filtered.map((t) => (
-            <Link to={`/tickets/${t._id}`} className="ticket-card" key={t._id}>
-              <div className="ticket-card-main">
-                <span className="ticket-number">
-                  {t.ticketNumber} · {t.customer?.name || "Unknown customer"}
-                </span>
-                <h3>{t.subject}</h3>
-                {!t.assignedWorker && <span className="unassigned-tag">Unassigned</span>}
-                {t.assignedWorker && <span className="ticket-number">Worker: {t.assignedWorker.name}</span>}
-              </div>
-              <div className="ticket-card-badges">
-                <span className="badge-priority" data-priority={t.priority}>{t.priority}</span>
-                <span className="badge-status" data-status={t.status}>{t.status}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
