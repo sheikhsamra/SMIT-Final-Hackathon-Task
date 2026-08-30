@@ -17,7 +17,7 @@ RelaySupport is a three-sided marketplace-style support platform:
 
 ### Core features
 
-- **AI-assisted triage** — every ticket gets an instant suggested category, priority, and one-line summary. Uses the Claude API when `ANTHROPIC_API_KEY` is set, and falls back to a transparent rule-based heuristic when it isn't — the app never breaks or looks broken for missing a key.
+- **AI-assisted triage** — every ticket gets an instant suggested category, priority, and one-line summary from a transparent rule-based heuristic (keyword matching on the subject/description) — this is what actually runs in this demo. The triage function is structured to call the Claude API instead when an `ANTHROPIC_API_KEY` is configured, but no key is set for this submission, so it always runs on the heuristic path.
 - **Worker matching with real reviews** — the "suggested workers" list on the ticket form shows each worker's rating and resolved count, and lets the customer expand and read their actual past reviews before booking.
 - **Booking lifecycle** — `New → Pending → Assigned → In Progress → Resolved`, with a separate `Rejected` terminal state. A worker must Accept a booking before a conversation opens; Rejected and Resolved tickets are permanently locked from further changes.
 - **Live-feeling updates without WebSockets** — the whole app polls on short intervals (4–8s) instead of using Socket.IO, specifically so it works cleanly on Vercel's serverless functions.
@@ -39,7 +39,6 @@ RelaySupport is a three-sided marketplace-style support platform:
 | Frontend | React (Vite), React Router, plain CSS (custom properties, no framework), GSAP (Services page animations only) |
 | Backend | Node.js, Express, MongoDB (Mongoose) |
 | Auth | JWT, bcryptjs |
-| AI | `@anthropic-ai/sdk` (Claude), with a rule-based fallback |
 | Hosting | Vercel (frontend + backend both deployed as separate Vercel projects) |
 
 ---
@@ -51,7 +50,7 @@ RelaySupport is a three-sided marketplace-style support platform:
 ```
 cd backend
 npm install
-cp .env.example .env   # fill in MONGO_URI, JWT_SECRET, and (optionally) ANTHROPIC_API_KEY
+cp .env.example .env   # fill in MONGO_URI and JWT_SECRET (ANTHROPIC_API_KEY is optional and unused in this submission)
 npm run dev
 ```
 Runs on `http://localhost:5000`.
@@ -114,7 +113,7 @@ backend/
     adminRoutes.js                overview stats, user list, block/unblock/warn, warning history
     notificationRoutes.js         list / mark read
   utils/
-    aiTriage.js                  Claude-powered triage with a heuristic fallback
+    aiTriage.js                  rule-based ticket triage (Claude call is wired up but unused — no key configured)
   seed.js                        demo accounts
   server.js                      entry point
 
@@ -137,5 +136,5 @@ frontend/src/
 
 - **Polling instead of WebSockets** — Socket.IO doesn't play well with Vercel's serverless functions (no persistent connections), so every page that needs to feel "live" polls the relevant endpoint every few seconds instead.
 - **No file storage service** — profile photos are resized in the browser (via `<canvas>`) down to a small JPEG and stored directly as a data URL on the user document. Fine at this scale; would need real object storage (S3/Cloudinary/etc.) beyond a hackathon demo.
-- **Heuristic AI fallback** — the app is fully functional and honest about it (`⚡ Quick Suggestion` vs `🤖 AI Suggestion` in the UI) even with zero external API keys configured.
+- **Rule-based triage, not a real AI call** — this submission runs entirely on the keyword-matching heuristic; no `ANTHROPIC_API_KEY` is configured anywhere. The triage function is structured so a real Claude call could be dropped in later without touching the rest of the app, but that path was never exercised here.
 - **`vercel.json` in `frontend/`** — Vercel's static hosting 404s on a direct reload of a client-side route (e.g. `/tickets/:id`) without a rewrite rule; this file redirects every path to `index.html` so React Router can take over.
