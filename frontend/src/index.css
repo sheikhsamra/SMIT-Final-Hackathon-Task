@@ -6,6 +6,19 @@
   padding: 0;
 }
 
+html, body {
+  height: 100%;
+}
+
+/* React mounts into #root, so #root — not body — must be the flex column
+   that stretches to the viewport height for the footer to stick to the
+   bottom on short pages instead of floating up under the content. */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 :root {
   --bg-primary: #0a0f0d;
   --bg-secondary: #0f1613;
