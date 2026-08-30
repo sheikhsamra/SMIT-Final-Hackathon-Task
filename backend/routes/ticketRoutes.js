@@ -304,10 +304,6 @@ router.patch("/:id/status", protect, restrictTo("worker", "admin"), async (req, 
     if (LOCKED_STATUSES.includes(ticket.status) && status !== ticket.status) {
       return res.status(400).json({ message: `A ${ticket.status.toLowerCase()} ticket cannot be changed.` });
     }
-    if (status === "Resolved" && !resolutionNote?.trim() && !ticket.resolutionNote) {
-      return res.status(400).json({ message: "A resolution note is required to resolve a ticket" });
-    }
-
     const wasAlreadyResolved = ticket.status === "Resolved";
     ticket.status = status;
     if (resolutionNote?.trim()) ticket.resolutionNote = resolutionNote.trim();
@@ -398,6 +394,19 @@ router.post("/:id/messages", protect, async (req, res) => {
     if (req.user.role !== "customer" && ticket.status !== "In Progress") {
       ticket.status = "In Progress";
       await ticket.save();
+    }
+
+    // Let the other side of the conversation know a reply came in — the
+    // customer if a worker/admin replied, or the assigned worker if the
+    // customer replied.
+    const recipient = req.user.role === "customer" ? ticket.assignedWorker : ticket.customer;
+    if (recipient) {
+      await notify(
+        recipient,
+        ticket,
+        "message",
+        `${req.user.name} sent a new message on "${ticket.subject}"`
+      );
     }
 
     const populated = await message.populate("sender", "name role");

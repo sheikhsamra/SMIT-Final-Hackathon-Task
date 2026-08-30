@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getTickets, getTicketStats } from "../utils/tickets";
 import DonutChart from "../components/DonutChart";
-import { IconTicket, IconInbox, IconClock, IconCheckCircle } from "../components/Icons";
+import { IconTicket, IconInbox, IconClock, IconCheckCircle, IconHourglass } from "../components/Icons";
 
 const STATUS_FILTERS = ["All", "New", "Pending", "Assigned", "In Progress", "Resolved", "Rejected"];
 const PRIORITY_FILTERS = ["All", "High", "Medium", "Low"];
@@ -67,6 +67,13 @@ export default function WorkerDashboard() {
           </div>
         </div>
         <div className="stat-card">
+          <span className="stat-icon" style={{ background: "rgba(var(--status-pending-rgb), 0.14)", color: "var(--status-pending)" }}><IconHourglass /></span>
+          <div className="stat-card-body">
+            <span className="stat-label">Waiting on Accept</span>
+            <span className="stat-value">{stats ? stats.byStatus?.Pending || 0 : "—"}</span>
+          </div>
+        </div>
+        <div className="stat-card">
           <span className="stat-icon" style={{ background: "rgba(var(--status-progress-rgb), 0.14)", color: "var(--status-progress)" }}><IconClock /></span>
           <div className="stat-card-body">
             <span className="stat-label">In Progress</span>
@@ -76,7 +83,7 @@ export default function WorkerDashboard() {
         <div className="stat-card">
           <span className="stat-icon" style={{ background: "rgba(var(--status-resolved-rgb), 0.14)", color: "var(--status-resolved)" }}><IconCheckCircle /></span>
           <div className="stat-card-body">
-            <span className="stat-label">Resolved</span>
+            <span className="stat-label">Completed</span>
             <span className="stat-value">{stats ? stats.byStatus?.Resolved || 0 : "—"}</span>
           </div>
         </div>

@@ -75,6 +75,15 @@ export const IconClock = () => (
   </svg>
 );
 
+export const IconHourglass = () => (
+  <svg {...base}>
+    <path d="M6 3h12" />
+    <path d="M6 21h12" />
+    <path d="M7 3v3.5a5 5 0 0 0 2 4l1.5 1.2a1 1 0 0 1 0 1.6L9 14.5a5 5 0 0 0-2 4V21" />
+    <path d="M17 3v3.5a5 5 0 0 1-2 4l-1.5 1.2a1 1 0 0 0 0 1.6l1.5 1.2a5 5 0 0 1 2 4V21" />
+  </svg>
+);
+
 export const IconBriefcase = () => (
   <svg {...base}>
     <rect x="3" y="7" width="18" height="13" rx="2" />

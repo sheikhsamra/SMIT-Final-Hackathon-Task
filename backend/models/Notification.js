@@ -6,7 +6,7 @@ const notificationSchema = new mongoose.Schema(
     ticket: { type: mongoose.Schema.Types.ObjectId, ref: "Ticket", required: true },
     type: {
       type: String,
-      enum: ["new_booking", "accepted", "rejected", "completed"],
+      enum: ["new_booking", "accepted", "rejected", "completed", "message"],
       required: true,
     },
     message: { type: String, required: true },

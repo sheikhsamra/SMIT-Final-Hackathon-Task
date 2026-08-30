@@ -39,7 +39,6 @@ export default function TicketDetail() {
   const [savingDetails, setSavingDetails] = useState(false);
   const [detailsError, setDetailsError] = useState("");
 
-  const [resolutionNoteInput, setResolutionNoteInput] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState("");
 
@@ -128,12 +127,8 @@ export default function TicketDetail() {
   const handleMarkInProgress = () => runAction(() => updateTicketStatus(id, "In Progress"));
   const handleReopen = () => runAction(() => reopenTicket(id));
 
-  const handleResolve = (e) => {
-    e.preventDefault();
-    if (!resolutionNoteInput.trim()) return;
-    runAction(() => updateTicketStatus(id, "Resolved", resolutionNoteInput)).then(() =>
-      setResolutionNoteInput("")
-    );
+  const handleResolve = () => {
+    runAction(() => updateTicketStatus(id, "Resolved"));
   };
 
   const handleRunTriage = async () => {
@@ -259,7 +254,7 @@ export default function TicketDetail() {
 
       {ticket.resolutionNote && (
         <div className="resolution-note">
-          <strong>Resolution:</strong> {ticket.resolutionNote}
+          <strong>How it was fixed:</strong> {ticket.resolutionNote}
         </div>
       )}
 
@@ -312,7 +307,7 @@ export default function TicketDetail() {
           {ticket.aiSuggestion?.category ? (
             <div className="ai-suggestion-card">
               <div className="ai-suggestion-title">
-                {ticket.aiSuggestion.source === "heuristic" ? "⚡ Auto-suggested (rule-based)" : "🤖 AI Suggestion"}
+                {ticket.aiSuggestion.source === "heuristic" ? "⚡ Quick Suggestion" : "🤖 AI Suggestion"}
               </div>
               <div className="ai-suggestion-body">
                 <span className="badge-priority" data-priority={ticket.aiSuggestion.priority}>
@@ -398,24 +393,13 @@ export default function TicketDetail() {
 
               {ticket.status === "Assigned" && (
                 <button className="btn-secondary" onClick={handleMarkInProgress} disabled={actionLoading}>
-                  Mark as In Progress
+                  Start Working
                 </button>
               )}
 
-              <form onSubmit={handleResolve} className="resolve-form">
-                <label className="field-label">Resolution note (required to resolve)</label>
-                <textarea
-                  className="field-textarea"
-                  placeholder="Summarize how this was resolved…"
-                  value={resolutionNoteInput}
-                  onChange={(e) => setResolutionNoteInput(e.target.value)}
-                  rows={2}
-                  maxLength={2000}
-                />
-                <button type="submit" className="btn-primary" disabled={actionLoading || !resolutionNoteInput.trim()}>
-                  {actionLoading ? "Resolving…" : "Resolve Ticket"}
-                </button>
-              </form>
+              <button className="btn-primary" onClick={handleResolve} disabled={actionLoading}>
+                {actionLoading ? "Finishing…" : "Finish"}
+              </button>
             </>
           )}
         </div>
