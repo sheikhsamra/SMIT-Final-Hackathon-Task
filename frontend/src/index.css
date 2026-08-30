@@ -1260,12 +1260,52 @@ body::after {
   color: var(--text-secondary);
 }
 
+.about-content .wide-page-title {
+  font-size: 2.4rem;
+  margin-bottom: 0;
+}
+
+.about-content-lead {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-top: -8px;
+}
+
+.about-intro {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 40px;
+  max-width: 1080px;
+  margin: 0 auto 48px;
+}
+
+.about-intro-illustration {
+  display: flex;
+  justify-content: center;
+}
+
+.about-intro-illustration .hero-illustration {
+  max-width: 360px;
+}
+
+@media (max-width: 860px) {
+  .about-intro {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .about-intro-illustration {
+    order: -1;
+  }
+}
+
 .about-content {
   display: flex;
   flex-direction: column;
   gap: 20px;
   max-width: 760px;
-  margin-bottom: 48px;
+  margin-bottom: 0;
 }
 
 .about-content > p {

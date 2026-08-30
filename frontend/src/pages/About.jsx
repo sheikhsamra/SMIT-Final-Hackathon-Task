@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import AboutIllustration from "../components/AboutIllustration";
 import {
   IconSparkle,
   IconBarChart,
@@ -41,24 +42,26 @@ export default function About({ onOpenAuth }) {
   const { user } = useAuth();
 
   return (
-    <div className="page wide-page">
-      <div className="dashboard-header">
-        <h1 className="wide-page-title">About RelaySupport</h1>
-        <p>A faster, more transparent way to run customer support.</p>
-      </div>
-
-      <div className="about-content">
-        <p>
-          RelaySupport is an AI-assisted support desk that connects customers directly with the
-          right worker for their issue — no waiting in a generic queue. When a ticket comes
-          in, our system reads it, suggests a category and priority, and shows the customer
-          a shortlist of specialists who can help, ranked by experience and rating.
-        </p>
-        <p>
-          Every step of the journey — booking, acceptance, conversation, resolution, and
-          review — is tracked in real time, so nothing gets lost and nobody is left
-          wondering what happens next.
-        </p>
+    <div className="page wide-page about-page">
+      <div className="about-intro">
+        <div className="about-content">
+          <h1 className="wide-page-title">About RelaySupport</h1>
+          <p className="about-content-lead">A faster, more transparent way to run customer support.</p>
+          <p>
+            RelaySupport is an AI-assisted support desk that connects customers directly with the
+            right worker for their issue — no waiting in a generic queue. When a ticket comes
+            in, our system reads it, suggests a category and priority, and shows the customer
+            a shortlist of specialists who can help, ranked by experience and rating.
+          </p>
+          <p>
+            Every step of the journey — booking, acceptance, conversation, resolution, and
+            review — is tracked in real time, so nothing gets lost and nobody is left
+            wondering what happens next.
+          </p>
+        </div>
+        <div className="about-intro-illustration">
+          <AboutIllustration />
+        </div>
       </div>
 
       <div className="vivid-stats-row how-it-works-row">
