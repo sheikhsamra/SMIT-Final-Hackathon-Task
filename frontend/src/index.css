@@ -3597,27 +3597,31 @@ body::after {
 }
 
 .review-card {
-  max-width: 900px;
+  max-width: 380px;
   background: rgba(var(--priority-medium-rgb), 0.08);
   border: 1px solid rgba(var(--priority-medium-rgb), 0.3);
-  border-radius: 12px;
-  padding: 16px 18px;
-  margin-bottom: 28px;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .review-card-title {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   color: var(--text-primary);
 }
 
 .review-comment {
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-style: italic;
+}
+
+.review-card .star-display .star {
+  font-size: 1.05rem;
 }
 
 .review-form {
