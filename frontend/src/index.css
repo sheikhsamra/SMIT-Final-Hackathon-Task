@@ -2282,12 +2282,16 @@ body::after {
     white-space: nowrap;
   }
   .admin-user-stat {
-    width: 100%;
+    /* width: 100% + margin-left: 56px would add up to more than the row's
+       own width (margin sits outside the width box), pushing this element
+       past the right edge and widening the whole page horizontally.
+       calc() bakes the margin into the width instead. */
+    width: calc(100% - 56px);
     margin-left: 56px;
     text-align: left;
   }
   .admin-user-actions {
-    width: 100%;
+    width: calc(100% - 56px);
     margin-left: 56px;
   }
 }
@@ -2446,16 +2450,6 @@ body::after {
   overflow-wrap: break-word;
 }
 
-@media (max-width: 640px) {
-  .admin-user-row {
-    flex-wrap: wrap;
-  }
-  .admin-user-stat {
-    width: 100%;
-    text-align: left;
-    margin-left: 56px;
-  }
-}
 
 .donut-chart-wrap {
   display: flex;
