@@ -1,6 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import NotificationBell from "./NotificationBell";
 
 export default function Navbar({ onOpenAuth }) {
   const { user, logout } = useAuth();
@@ -15,10 +16,36 @@ export default function Navbar({ onOpenAuth }) {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/">🚀 HackProject</Link>
+        <Link to="/">Relay</Link>
       </div>
-      <div className="navbar-links">
-        <Link to="/">Home</Link>
+
+      <div className="navbar-center">
+        <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
+          Home
+        </NavLink>
+        {user && (
+          <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
+            Dashboard
+          </NavLink>
+        )}
+        {user?.role === "customer" && (
+          <NavLink to="/tickets" className={({ isActive }) => (isActive ? "active" : "")}>
+            My Tickets
+          </NavLink>
+        )}
+        {user?.role === "admin" && (
+          <NavLink to="/admin" className={({ isActive }) => (isActive ? "active" : "")}>
+            Admin
+          </NavLink>
+        )}
+        {(user?.role === "worker" || user?.role === "admin") && (
+          <NavLink to="/worker" className={({ isActive }) => (isActive ? "active" : "")}>
+            Worker Dashboard
+          </NavLink>
+        )}
+      </div>
+
+      <div className="navbar-actions">
         <button
           onClick={toggleTheme}
           className="theme-toggle-btn"
@@ -31,20 +58,23 @@ export default function Navbar({ onOpenAuth }) {
         </button>
         {user ? (
           <>
-            <Link to="/dashboard">Dashboard</Link>
-            <span className="navbar-username">Hi, {user.name}</span>
+            <NotificationBell />
+            <span className="navbar-username">
+              Hi, {user.name}
+              {user.role !== "customer" && <span className="role-tag">{user.role}</span>}
+            </span>
             <button onClick={handleLogout} className="btn-link">Logout</button>
           </>
         ) : (
           <>
-            <button 
-              onClick={() => onOpenAuth("login")} 
+            <button
+              onClick={() => onOpenAuth("login")}
               className="nav-btn-trigger"
             >
               Login
             </button>
-            <button 
-              onClick={() => onOpenAuth("register")} 
+            <button
+              onClick={() => onOpenAuth("register")}
               className="nav-btn-trigger register-btn"
             >
               Register

@@ -8,6 +8,11 @@ import AuthModal from "./components/AuthModal";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import NewTicket from "./pages/NewTicket";
+import MyTickets from "./pages/MyTickets";
+import TicketDetail from "./pages/TicketDetail";
+import WorkerDashboard from "./pages/WorkerDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 export default function App() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -31,6 +36,46 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tickets/new"
+                element={
+                  <ProtectedRoute roles={["customer"]}>
+                    <NewTicket />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tickets"
+                element={
+                  <ProtectedRoute roles={["customer"]}>
+                    <MyTickets />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tickets/:id"
+                element={
+                  <ProtectedRoute>
+                    <TicketDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/worker"
+                element={
+                  <ProtectedRoute roles={["worker", "admin"]}>
+                    <WorkerDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute roles={["admin"]}>
+                    <AdminDashboard />
                   </ProtectedRoute>
                 }
               />

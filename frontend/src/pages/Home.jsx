@@ -3,19 +3,19 @@ import { Link } from "react-router-dom";
 
 const FEATURES = [
   {
-    icon: "🔐",
-    title: "Auth Ready",
-    desc: "JWT login, register, and protected routes are wired up out of the box.",
+    icon: "🤖",
+    title: "AI Triage",
+    desc: "Every ticket is automatically categorized, prioritized, and summarized by AI before a worker opens it.",
   },
   {
     icon: "⚡",
-    title: "MERN Stack",
-    desc: "MongoDB, Express, React, and Node — all connected and ready to go.",
+    title: "Real-time Updates",
+    desc: "Replies and status changes show up instantly for both customer and worker — no refreshing needed.",
   },
   {
-    icon: "🎨",
-    title: "Themeable UI",
-    desc: "Dark/light mode toggle and a glassmorphism design system, built-in.",
+    icon: "🔒",
+    title: "Role-based Access",
+    desc: "Customers see only their own tickets; workers see and manage what's assigned to them.",
   },
 ];
 
@@ -25,13 +25,13 @@ export default function Home({ onOpenAuth }) {
   return (
     <div className="page">
       <div className="hero">
-        <span className="hero-badge">🚀 Hackathon Starter</span>
+        <span className="hero-badge">🎫 AI-Assisted Support Desk</span>
         <h1>
-          Build fast, <span className="hero-highlight">ship faster</span>
+          Every ticket, <span className="hero-highlight">relayed right</span>
         </h1>
         <p>
-          Header, Footer, Navbar, and Authentication are ready to go — now just add
-          your actual idea or feature into this structure.
+          Submit a ticket, let AI triage it in seconds, and get a real response from
+          a real worker — all tracked in one place.
         </p>
 
         <div className="cta-group">
@@ -42,7 +42,7 @@ export default function Home({ onOpenAuth }) {
           ) : (
             <>
               <button className="btn-primary" onClick={() => onOpenAuth?.("register")}>
-                Get Started →
+                Submit a Ticket →
               </button>
               <button className="btn-secondary" onClick={() => onOpenAuth?.("login")}>
                 I already have an account

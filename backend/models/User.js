@@ -6,7 +6,14 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true, minlength: 6 },
-    role: { type: String, enum: ["user", "admin"], default: "user" },
+    role: { type: String, enum: ["customer", "worker", "admin"], default: "customer" },
+    // Only meaningful for workers — which ticket category they handle, used
+    // to match them against a customer's ticket.
+    specialization: {
+      type: String,
+      enum: ["Billing", "Technical", "Account", "General", "Other", null],
+      default: null,
+    },
   },
   { timestamps: true }
 );

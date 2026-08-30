@@ -2,6 +2,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { protect } from "../middleware/authMiddleware.js";
+import { authLimiter } from "../middleware/rateLimit.js";
 
 const router = express.Router();
 
@@ -10,12 +11,22 @@ const generateToken = (id) => {
 };
 
 // @route  POST /api/auth/register
-router.post("/register", async (req, res) => {
+router.post("/register", authLimiter, async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role, specialization } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Please fill in all fields" });
+    }
+
+    let finalRole = "customer";
+    let finalSpecialization = null;
+    if (role === "worker") {
+      if (!specialization) {
+        return res.status(400).json({ message: "Please select a specialization" });
+      }
+      finalRole = "worker";
+      finalSpecialization = specialization;
     }
 
     const userExists = await User.findOne({ email });
@@ -23,13 +34,20 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "An account with this email already exists" });
     }
 
-    const user = await User.create({ name, email, password });
+    const user = await User.create({
+      name,
+      email,
+      password,
+      role: finalRole,
+      specialization: finalSpecialization,
+    });
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
+      specialization: user.specialization,
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -44,7 +62,7 @@ router.post("/register", async (req, res) => {
 });
 
 // @route  POST /api/auth/login
-router.post("/login", async (req, res) => {
+router.post("/login", authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -55,6 +73,7 @@ router.post("/login", async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        specialization: user.specialization,
         token: generateToken(user._id),
       });
     } else {

@@ -1,20 +1,27 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+
+const DASHBOARD_BY_ROLE = { customer: "/dashboard", worker: "/worker", admin: "/admin" };
 
 export default function Register({ onSuccess, onSwitchToLogin }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState("customer");
+  const [specialization, setSpecialization] = useState("Billing");
   const [error, setError] = useState("");
   const { register } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
-      await register(name, email, password);
+      const data = await register(name, email, password, role, specialization);
       if (onSuccess) onSuccess();
+      navigate(DASHBOARD_BY_ROLE[data.role] || "/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed. Please try again.");
     }
@@ -31,11 +38,44 @@ export default function Register({ onSuccess, onSwitchToLogin }) {
         </svg>
       </div>
       <h2>Create account</h2>
-      <p>Create your free account in just a few seconds</p>
+      <p>Create your account to start submitting support tickets</p>
 
       {error && <p className="error-text">{error}</p>}
 
       <form onSubmit={handleSubmit} className="auth-form">
+        <div className="role-toggle">
+          <button
+            type="button"
+            className={role === "customer" ? "active" : ""}
+            onClick={() => setRole("customer")}
+          >
+            Customer
+          </button>
+          <button
+            type="button"
+            className={role === "worker" ? "active" : ""}
+            onClick={() => setRole("worker")}
+          >
+            Worker
+          </button>
+        </div>
+
+        {role === "worker" && (
+          <div className="form-group">
+            <select
+              className="field-select"
+              value={specialization}
+              onChange={(e) => setSpecialization(e.target.value)}
+            >
+              <option value="Billing">Billing</option>
+              <option value="Technical">Technical</option>
+              <option value="Account">Account</option>
+              <option value="General">General</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        )}
+
         <div className="form-group">
           <input
             type="text"

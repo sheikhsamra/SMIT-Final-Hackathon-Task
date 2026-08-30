@@ -21,10 +21,10 @@ export const protect = async (req, res, next) => {
   }
 };
 
-// Verifies the user has the "admin" role (use after the protect middleware)
-export const adminOnly = (req, res, next) => {
-  if (req.user && req.user.role === "admin") {
+// Restricts a route to the given roles, e.g. restrictTo("worker", "admin") (use after the protect middleware)
+export const restrictTo = (...allowedRoles) => (req, res, next) => {
+  if (req.user && allowedRoles.includes(req.user.role)) {
     return next();
   }
-  return res.status(403).json({ message: "Access restricted to admins only" });
+  return res.status(403).json({ message: "You do not have permission to perform this action" });
 };

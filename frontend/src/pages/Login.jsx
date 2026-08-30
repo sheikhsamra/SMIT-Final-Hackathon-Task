@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+
+const DASHBOARD_BY_ROLE = { customer: "/dashboard", worker: "/worker", admin: "/admin" };
 
 export default function Login({ onSuccess, onSwitchToRegister }) {
   const [email, setEmail] = useState("");
@@ -7,13 +10,15 @@ export default function Login({ onSuccess, onSwitchToRegister }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
-      await login(email, password);
+      const data = await login(email, password);
       if (onSuccess) onSuccess();
+      navigate(DASHBOARD_BY_ROLE[data.role] || "/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Please try again.");
     }
@@ -28,7 +33,7 @@ export default function Login({ onSuccess, onSwitchToRegister }) {
         </svg>
       </div>
       <h2>Welcome back</h2>
-      <p>Log in to access your dashboard</p>
+      <p>Log in to view and manage your support tickets</p>
 
       {error && <p className="error-text">{error}</p>}
 
