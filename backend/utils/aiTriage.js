@@ -1,20 +1,8 @@
-import Anthropic from "@anthropic-ai/sdk";
-import { z } from "zod";
-import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
-
-const client = new Anthropic();
-
-const TriageSchema = z.object({
-  category: z.enum(["Billing", "Technical", "Account", "General", "Other"]),
-  priority: z.enum(["Low", "Medium", "High"]),
-  summary: z.string().min(1).max(300),
-});
-
-// --- Rule-based fallback -----------------------------------------------
-// Used whenever no LLM key is configured, or the real AI call fails/times
-// out. Keeps the exact same { category, priority, summary } shape so the
-// rest of the app (storage, validation, the worker's review UI) never has to
-// know which path produced the suggestion.
+// --- Rule-based ticket triage --------------------------------------------
+// Keyword matching on the subject/description. Keeps a stable
+// { category, priority, summary, source } shape so the rest of the app
+// (storage, validation, the worker's review UI) doesn't need to care how
+// the suggestion was produced.
 const CATEGORY_KEYWORDS = {
   Billing: ["charge", "charged", "refund", "payment", "invoice", "bill", "subscription", "price"],
   Technical: ["error", "bug", "crash", "broken", "not working", "doesn't work", "failed", "freeze", "glitch"],
@@ -55,36 +43,7 @@ const heuristicTriage = ({ subject, description }) => {
 
 // --- Public API ----------------------------------------------------------
 // Always resolves to a { category, priority, summary, source } suggestion —
-// never null — so ticket creation and the worker's review UI behave the same
-// whether a real AI key is configured or not.
+// never null — so ticket creation and the worker's review UI can rely on it.
 export const triageTicket = async ({ subject, description }) => {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return heuristicTriage({ subject, description });
-  }
-
-  try {
-    const response = await client.messages.parse(
-      {
-        model: "claude-opus-5",
-        max_tokens: 512,
-        system:
-          "You are a support-ticket triage assistant. Read the customer's ticket and classify it. " +
-          "Be decisive. The summary must be a single concise sentence restating the core issue.",
-        messages: [
-          { role: "user", content: `Subject: ${subject}\n\nDescription: ${description}` },
-        ],
-        output_config: {
-          format: zodOutputFormat(TriageSchema),
-          effort: "low",
-        },
-      },
-      { timeout: 12000 }
-    );
-
-    if (!response.parsed_output) return heuristicTriage({ subject, description });
-    return { ...response.parsed_output, source: "ai" };
-  } catch (error) {
-    console.error("AI triage failed, falling back to rule-based triage:", error.message);
-    return heuristicTriage({ subject, description });
-  }
+  return heuristicTriage({ subject, description });
 };
