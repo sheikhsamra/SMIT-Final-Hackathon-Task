@@ -89,6 +89,42 @@ export const IconPencil = () => (
   </svg>
 );
 
+export const IconCreditCard = () => (
+  <svg {...base}>
+    <rect x="2.5" y="5.5" width="19" height="13" rx="2.5" />
+    <path d="M2.5 9.5h19" />
+    <path d="M6 14.5h4" />
+  </svg>
+);
+
+export const IconWrench = () => (
+  <svg {...base}>
+    <path d="M14.7 6.3a4 4 0 0 0-5.6 4.9L3 17.3l2.7 2.7 6.1-6.1a4 4 0 0 0 4.9-5.6l-2.6 2.6-2-2Z" />
+  </svg>
+);
+
+export const IconLock = () => (
+  <svg {...base}>
+    <rect x="4" y="11" width="16" height="9" rx="2" />
+    <path d="M7.5 11V7.5a4.5 4.5 0 0 1 9 0V11" />
+  </svg>
+);
+
+export const IconChat = () => (
+  <svg {...base}>
+    <path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" />
+  </svg>
+);
+
+export const IconBox = () => (
+  <svg {...base}>
+    <path d="M3.5 8 12 3.5 20.5 8 12 12.5Z" />
+    <path d="M3.5 8v9L12 21.5" />
+    <path d="M20.5 8v9L12 21.5" />
+    <path d="M12 12.5v9" />
+  </svg>
+);
+
 export const IconStar = () => (
   <svg {...base}>
     <path d="M12 3.5 14.7 9l6.1.9-4.4 4.3 1 6.1L12 17.3 6.6 20.3l1-6.1L3.2 9.9 9.3 9Z" />

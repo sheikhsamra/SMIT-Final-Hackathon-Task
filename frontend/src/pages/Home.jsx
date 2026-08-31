@@ -62,7 +62,7 @@ export default function Home({ onOpenAuth }) {
   const { user } = useAuth();
 
   return (
-    <div className="page hero-page">
+    <div className="page hero-page wide-page">
       <div className="hero-bg-blobs" aria-hidden="true">
         <span className="hero-blob hero-blob-1" />
         <span className="hero-blob hero-blob-2" />
