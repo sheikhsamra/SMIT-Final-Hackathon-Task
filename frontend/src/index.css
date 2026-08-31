@@ -2586,6 +2586,19 @@ body::after {
   margin: 24px auto 0;
 }
 
+.new-ticket-page .dashboard-header {
+  text-align: center;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.new-ticket-page > .error-text {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
 .spinner-wrap.small {
   padding: 20px 0;
 }
