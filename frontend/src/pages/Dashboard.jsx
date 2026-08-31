@@ -17,12 +17,12 @@ const STATUS_COLORS = {
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const isWorker = user?.role === "worker" || user?.role === "admin";
+  const isCustomer = user?.role === "customer";
   const [stats, setStats] = useState(null);
   const [tickets, setTickets] = useState(null);
 
   useEffect(() => {
-    if (isWorker) return;
+    if (!isCustomer) return;
     const load = () => {
       getTicketStats().then(setStats).catch(() => {});
       getTickets().then(setTickets).catch(() => {});
@@ -30,13 +30,13 @@ export default function Dashboard() {
     load();
     const interval = setInterval(load, 6000);
     return () => clearInterval(interval);
-  }, [isWorker]);
+  }, [isCustomer]);
 
-  // Workers/admins manage everything (profile, reviews, tickets) from the
-  // Worker Dashboard now — this page is customer-only.
-  if (isWorker) {
-    return <Navigate to="/worker" replace />;
-  }
+  // Workers manage everything (profile, reviews, tickets) from the Worker
+  // Dashboard, and admins from the Admin Overview — this page is
+  // customer-only.
+  if (user?.role === "worker") return <Navigate to="/worker" replace />;
+  if (user?.role === "admin") return <Navigate to="/admin" replace />;
 
   const open = stats ? stats.total - (stats.byStatus?.Resolved || 0) : null;
 

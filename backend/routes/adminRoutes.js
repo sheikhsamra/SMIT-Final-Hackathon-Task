@@ -2,6 +2,7 @@ import express from "express";
 import User from "../models/User.js";
 import Ticket from "../models/Ticket.js";
 import Review from "../models/Review.js";
+import Notification from "../models/Notification.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -48,6 +49,7 @@ router.get("/users", protect, restrictTo("admin"), async (req, res) => {
           specialization: u.specialization,
           avatar: u.avatar,
           createdAt: u.createdAt,
+          isBlocked: u.isBlocked,
         };
 
         if (u.role === "worker") {
@@ -72,6 +74,67 @@ router.get("/users", protect, restrictTo("admin"), async (req, res) => {
     );
 
     res.json(withStats);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// @route  PATCH /api/admin/users/:id/block  (admin-only — block a user or worker)
+router.patch("/users/:id/block", protect, restrictTo("admin"), async (req, res) => {
+  try {
+    const target = await User.findById(req.params.id);
+    if (!target) return res.status(404).json({ message: "User not found" });
+    if (target.role === "admin") {
+      return res.status(400).json({ message: "Admins can't be blocked" });
+    }
+    if (target._id.equals(req.user._id)) {
+      return res.status(400).json({ message: "You can't block yourself" });
+    }
+
+    target.isBlocked = true;
+    await target.save();
+    res.json({ _id: target._id, isBlocked: target.isBlocked });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// @route  PATCH /api/admin/users/:id/unblock  (admin-only)
+router.patch("/users/:id/unblock", protect, restrictTo("admin"), async (req, res) => {
+  try {
+    const target = await User.findById(req.params.id);
+    if (!target) return res.status(404).json({ message: "User not found" });
+
+    target.isBlocked = false;
+    await target.save();
+    res.json({ _id: target._id, isBlocked: target.isBlocked });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// @route  POST /api/admin/users/:id/warn  (admin-only — sends the user a
+// notification with the admin's message; no separate warning record kept)
+router.post("/users/:id/warn", protect, restrictTo("admin"), async (req, res) => {
+  try {
+    const { message } = req.body;
+    if (!message?.trim()) {
+      return res.status(400).json({ message: "A warning message is required" });
+    }
+
+    const target = await User.findById(req.params.id);
+    if (!target) return res.status(404).json({ message: "User not found" });
+    if (target.role === "admin") {
+      return res.status(400).json({ message: "Admins can't be warned" });
+    }
+
+    await Notification.create({
+      user: target._id,
+      type: "warning",
+      message: message.trim(),
+    });
+
+    res.json({ message: "Warning sent" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

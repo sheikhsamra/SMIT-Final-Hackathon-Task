@@ -131,6 +131,14 @@ export const IconChevronDown = () => (
   </svg>
 );
 
+export const IconAlertTriangle = () => (
+  <svg {...base}>
+    <path d="M12 3.5 22 20.5H2Z" />
+    <path d="M12 10v4" />
+    <path d="M12 17.5h.01" />
+  </svg>
+);
+
 export const IconSend = () => (
   <svg {...base}>
     <path d="M22 2 11 13" />

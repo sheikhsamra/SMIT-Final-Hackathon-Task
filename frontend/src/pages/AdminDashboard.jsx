@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { getAdminOverview, getAdminUsers } from "../utils/admin";
+import { getAdminOverview, getAdminUsers, blockUser, unblockUser, warnUser } from "../utils/admin";
 import DonutChart from "../components/DonutChart";
 import { IconUsers, IconUser, IconBriefcase, IconShield } from "../components/Icons";
 
@@ -27,11 +26,15 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState(null);
   const [error, setError] = useState("");
   const [roleFilter, setRoleFilter] = useState("All");
+  const [actionLoadingId, setActionLoadingId] = useState(null);
+  const [actionError, setActionError] = useState("");
+
+  const loadUsers = () => getAdminUsers().then(setUsers).catch(() => {});
 
   useEffect(() => {
     const load = () => {
       getAdminOverview().then(setOverview).catch((err) => setError(err.response?.data?.message || "Could not load overview."));
-      getAdminUsers().then(setUsers).catch(() => {});
+      loadUsers();
     };
     load();
     const interval = setInterval(load, 8000);
@@ -39,6 +42,47 @@ export default function AdminDashboard() {
   }, []);
 
   const filteredUsers = (users || []).filter((u) => roleFilter === "All" || u.role === roleFilter);
+
+  const handleBlock = async (u) => {
+    if (!window.confirm(`Block ${u.name}? They won't be able to log in until you unblock them.`)) return;
+    setActionLoadingId(u._id);
+    setActionError("");
+    try {
+      await blockUser(u._id);
+      await loadUsers();
+    } catch (err) {
+      setActionError(err.response?.data?.message || "Could not block this user.");
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  const handleUnblock = async (u) => {
+    setActionLoadingId(u._id);
+    setActionError("");
+    try {
+      await unblockUser(u._id);
+      await loadUsers();
+    } catch (err) {
+      setActionError(err.response?.data?.message || "Could not unblock this user.");
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  const handleWarn = async (u) => {
+    const message = window.prompt(`Warning message for ${u.name}:`, "");
+    if (!message?.trim()) return;
+    setActionLoadingId(u._id);
+    setActionError("");
+    try {
+      await warnUser(u._id, message.trim());
+    } catch (err) {
+      setActionError(err.response?.data?.message || "Could not send the warning.");
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
 
   return (
     <div className="page wide-page">
@@ -142,10 +186,12 @@ export default function AdminDashboard() {
             </div>
           )}
 
+          {actionError && <p className="error-text">{actionError}</p>}
+
           {users && filteredUsers.length > 0 && (
             <div className="admin-user-list">
               {filteredUsers.map((u) => (
-                <div className="admin-user-row" key={u._id}>
+                <div className={`admin-user-row ${u.isBlocked ? "blocked" : ""}`} key={u._id}>
                   <span
                     className="admin-user-avatar"
                     style={u.avatar ? { backgroundImage: `url(${u.avatar})` } : undefined}
@@ -153,7 +199,10 @@ export default function AdminDashboard() {
                     {!u.avatar && u.name.charAt(0).toUpperCase()}
                   </span>
                   <div className="admin-user-info">
-                    <span className="admin-user-name">{u.name}</span>
+                    <span className="admin-user-name">
+                      {u.name}
+                      {u.isBlocked && <span className="admin-blocked-tag">Blocked</span>}
+                    </span>
                     <span className="admin-user-email">{u.email}</span>
                   </div>
                   <span className={`profile-role-badge role-${u.role}`}>{u.role}</span>
@@ -169,14 +218,43 @@ export default function AdminDashboard() {
                     )}
                     {u.role === "admin" && <span>Administrator</span>}
                   </div>
+
+                  {u.role !== "admin" && (
+                    <div className="admin-user-actions">
+                      <button
+                        type="button"
+                        className="admin-action-btn warn"
+                        onClick={() => handleWarn(u)}
+                        disabled={actionLoadingId === u._id}
+                      >
+                        Warn
+                      </button>
+                      {u.isBlocked ? (
+                        <button
+                          type="button"
+                          className="admin-action-btn unblock"
+                          onClick={() => handleUnblock(u)}
+                          disabled={actionLoadingId === u._id}
+                        >
+                          Unblock
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="admin-action-btn block"
+                          onClick={() => handleBlock(u)}
+                          disabled={actionLoadingId === u._id}
+                        >
+                          Block
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           )}
 
-          <div className="cta-group dashboard-cta">
-            <Link to="/worker" className="btn-primary">Manage Tickets →</Link>
-          </div>
         </>
       )}
     </div>

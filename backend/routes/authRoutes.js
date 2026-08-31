@@ -69,6 +69,10 @@ router.post("/login", authLimiter, async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
+    if (user && (await user.matchPassword(password)) && user.isBlocked) {
+      return res.status(403).json({ message: "Your account has been blocked. Contact support if you think this is a mistake." });
+    }
+
     if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,

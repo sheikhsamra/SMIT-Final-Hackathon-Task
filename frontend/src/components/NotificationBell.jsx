@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from "../utils/notifications";
-import { IconBell, IconInbox, IconCheckCircle, IconXCircle, IconSparkle } from "./Icons";
+import { IconBell, IconInbox, IconCheckCircle, IconXCircle, IconSparkle, IconAlertTriangle } from "./Icons";
 
 const TYPE_META = {
   new_booking: { Icon: IconInbox, title: "New Booking", color: "var(--status-new)", bg: "rgba(var(--status-new-rgb), 0.14)" },
   accepted: { Icon: IconCheckCircle, title: "Accepted", color: "var(--status-resolved)", bg: "rgba(var(--status-resolved-rgb), 0.14)" },
   rejected: { Icon: IconXCircle, title: "Rejected", color: "var(--priority-high)", bg: "rgba(var(--priority-high-rgb), 0.14)" },
   completed: { Icon: IconSparkle, title: "Completed", color: "var(--priority-medium)", bg: "rgba(var(--priority-medium-rgb), 0.14)" },
+  warning: { Icon: IconAlertTriangle, title: "Warning from Admin", color: "var(--priority-high)", bg: "rgba(var(--priority-high-rgb), 0.14)" },
 };
 
 const timeAgo = (dateString) => {
@@ -50,7 +51,9 @@ export default function NotificationBell() {
       markNotificationRead(n._id).catch(() => {});
       setNotifications((prev) => prev.map((x) => (x._id === n._id ? { ...x, read: true } : x)));
     }
-    navigate(`/tickets/${n.ticket}`);
+    // Account-level notifications (e.g. an admin warning) aren't tied to a
+    // ticket, so there's nowhere to navigate.
+    if (n.ticket) navigate(`/tickets/${n.ticket}`);
   };
 
   const handleMarkAllRead = () => {

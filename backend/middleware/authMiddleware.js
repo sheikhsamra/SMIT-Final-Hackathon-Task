@@ -13,6 +13,9 @@ export const protect = async (req, res, next) => {
       if (!req.user) {
         return res.status(401).json({ message: "Your session is no longer valid, please log in again" });
       }
+      if (req.user.isBlocked) {
+        return res.status(401).json({ message: "Your account has been blocked. Contact support if you think this is a mistake." });
+      }
       return next();
     } catch (error) {
       return res.status(401).json({ message: "Invalid or expired token, please log in again" });

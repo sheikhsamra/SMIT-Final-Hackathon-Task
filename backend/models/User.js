@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema(
     // A small data-URL (resized client-side before upload) — no external
     // storage needed for a hackathon-scale user base.
     avatar: { type: String, default: null },
+    // Set by an admin — a blocked user can no longer log in, and any
+    // existing session is rejected on its next request.
+    isBlocked: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

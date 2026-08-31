@@ -2125,6 +2125,85 @@ body::after {
   height: 12px;
 }
 
+.admin-user-row.blocked {
+  border-color: rgba(var(--priority-high-rgb), 0.4);
+  background: rgba(var(--priority-high-rgb), 0.06);
+}
+
+.admin-blocked-tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 9px;
+  border-radius: 9999px;
+  background: rgba(var(--priority-high-rgb), 0.14);
+  color: var(--priority-high);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  vertical-align: middle;
+}
+
+.admin-user-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.admin-action-btn {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--border-input);
+  background: var(--bg-input);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-action-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.admin-action-btn.warn {
+  color: var(--priority-medium);
+}
+
+.admin-action-btn.warn:hover:not(:disabled) {
+  border-color: var(--priority-medium);
+  background: rgba(var(--priority-medium-rgb), 0.1);
+}
+
+.admin-action-btn.block {
+  color: var(--priority-high);
+}
+
+.admin-action-btn.block:hover:not(:disabled) {
+  border-color: var(--priority-high);
+  background: rgba(var(--priority-high-rgb), 0.1);
+}
+
+.admin-action-btn.unblock {
+  color: var(--status-resolved);
+}
+
+.admin-action-btn.unblock:hover:not(:disabled) {
+  border-color: var(--status-resolved);
+  background: rgba(var(--status-resolved-rgb), 0.1);
+}
+
+@media (max-width: 760px) {
+  .admin-user-row {
+    flex-wrap: wrap;
+  }
+  .admin-user-actions {
+    width: 100%;
+    margin-left: 56px;
+  }
+}
+
 @media (max-width: 640px) {
   .admin-user-row {
     flex-wrap: wrap;

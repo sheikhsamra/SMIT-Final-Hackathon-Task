@@ -48,7 +48,7 @@ export default function Navbar({ onOpenAuth }) {
             Admin
           </NavLink>
         )}
-        {(user?.role === "worker" || user?.role === "admin") && (
+        {user?.role === "worker" && (
           <NavLink to="/worker" className={({ isActive }) => (isActive ? "active" : "")}>
             Worker Dashboard
           </NavLink>
