@@ -131,6 +131,13 @@ export const IconChevronDown = () => (
   </svg>
 );
 
+export const IconSend = () => (
+  <svg {...base}>
+    <path d="M22 2 11 13" />
+    <path d="M22 2 15 22l-4-9-9-4Z" />
+  </svg>
+);
+
 export const IconStar = () => (
   <svg {...base}>
     <path d="M12 3.5 14.7 9l6.1.9-4.4 4.3 1 6.1L12 17.3 6.6 20.3l1-6.1L3.2 9.9 9.3 9Z" />

@@ -5,6 +5,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
+import ChatWidget from "./components/ChatWidget";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 
@@ -108,6 +109,8 @@ export default function App() {
             onClose={() => setIsAuthOpen(false)}
             initialMode={authMode}
           />
+
+          <ChatWidget />
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
