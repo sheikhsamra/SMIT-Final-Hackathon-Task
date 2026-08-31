@@ -63,36 +63,42 @@ export default function Services({ onOpenAuth }) {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(headerRef.current.children, {
+      // Header and the category cards are visible the instant the page
+      // loads, so they animate on mount — no ScrollTrigger needed, and
+      // nothing to accidentally catch mid-flight on first paint.
+      const tl = gsap.timeline({ defaults: { ease: "back.out(1.6)" } });
+      tl.from(headerRef.current.children, {
         opacity: 0,
         y: 24,
         duration: 0.6,
-        stagger: 0.1,
+        stagger: 0.12,
         ease: "power2.out",
-      });
-
-      gsap.from(cardsRef.current.children, {
-        opacity: 0,
-        y: 40,
-        scale: 0.96,
-        duration: 0.6,
-        stagger: 0.09,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: cardsRef.current,
-          start: "top 88%",
+        clearProps: "all",
+      }).from(
+        cardsRef.current.children,
+        {
+          opacity: 0,
+          y: 70,
+          duration: 0.7,
+          stagger: 0.12,
+          clearProps: "all",
         },
-      });
+        "-=0.25"
+      );
 
+      // "Why it works" is below the fold, so it plays once when scrolled
+      // into view.
       gsap.from(whyRef.current.children, {
         opacity: 0,
-        y: 30,
-        duration: 0.5,
-        stagger: 0.1,
+        y: 50,
+        duration: 0.6,
+        stagger: 0.15,
         ease: "power2.out",
+        clearProps: "all",
         scrollTrigger: {
           trigger: whyRef.current,
-          start: "top 88%",
+          start: "top 85%",
+          once: true,
         },
       });
     });
@@ -114,7 +120,26 @@ export default function Services({ onOpenAuth }) {
 
       <div className="services-grid" ref={cardsRef}>
         {SERVICES.map((s) => (
-          <div className={`service-card ${s.color}`} key={s.title}>
+          <div
+            className={`service-card ${s.color}`}
+            key={s.title}
+            onMouseEnter={(e) =>
+              gsap.to(e.currentTarget.querySelector(".service-card-icon"), {
+                scale: 1.2,
+                rotate: -8,
+                duration: 0.25,
+                ease: "back.out(2)",
+              })
+            }
+            onMouseLeave={(e) =>
+              gsap.to(e.currentTarget.querySelector(".service-card-icon"), {
+                scale: 1,
+                rotate: 0,
+                duration: 0.3,
+                ease: "power2.out",
+              })
+            }
+          >
             <span className="service-card-icon"><s.Icon /></span>
             <h3>{s.title}</h3>
             <p>{s.desc}</p>

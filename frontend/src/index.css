@@ -1033,8 +1033,15 @@ body::after {
 .services-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  align-items: stretch;
   gap: 22px;
-  margin: 8px 0 8px;
+  margin: 8px 0 72px;
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .service-card {
