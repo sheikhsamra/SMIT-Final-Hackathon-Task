@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createTicket, getMatchingWorkers } from "../utils/tickets";
+import { createTicket, getMatchingWorkers, getWorkerProfile } from "../utils/tickets";
+import { IconStar, IconChevronDown, IconSparkle } from "../components/Icons";
 
 const CATEGORIES = ["General", "Billing", "Technical", "Account", "Other"];
 
@@ -16,12 +17,38 @@ export default function NewTicket() {
   const [loadingWorkers, setLoadingWorkers] = useState(false);
   const [selectedWorker, setSelectedWorker] = useState(null);
 
+  // Reviews are fetched on demand (only when a customer expands "View
+  // Reviews" for a specific worker) and cached by worker id so re-opening
+  // doesn't refetch.
+  const [expandedWorkerId, setExpandedWorkerId] = useState(null);
+  const [reviewsByWorker, setReviewsByWorker] = useState({});
+  const [loadingReviewsFor, setLoadingReviewsFor] = useState(null);
+
+  const toggleReviews = async (workerId) => {
+    if (expandedWorkerId === workerId) {
+      setExpandedWorkerId(null);
+      return;
+    }
+    setExpandedWorkerId(workerId);
+    if (reviewsByWorker[workerId]) return;
+    setLoadingReviewsFor(workerId);
+    try {
+      const profile = await getWorkerProfile(workerId);
+      setReviewsByWorker((prev) => ({ ...prev, [workerId]: profile.reviews || [] }));
+    } catch {
+      setReviewsByWorker((prev) => ({ ...prev, [workerId]: [] }));
+    } finally {
+      setLoadingReviewsFor(null);
+    }
+  };
+
   // Every time the category changes, fetch the workers who specialize in it —
   // this is what feels like an "AI recommending a match," but it's just a
   // straightforward backend query filtered by specialization.
   useEffect(() => {
     setLoadingWorkers(true);
     setSelectedWorker(null);
+    setExpandedWorkerId(null);
     getMatchingWorkers(category)
       .then(setWorkers)
       .catch(() => setWorkers([]))
@@ -91,7 +118,7 @@ export default function NewTicket() {
         </div>
 
         <div className="form-group">
-          <label className="field-label">🎯 Suggested Workers for {category}</label>
+          <label className="field-label"><IconSparkle /> Suggested Workers for {category}</label>
 
           {loadingWorkers && (
             <div className="spinner-wrap small">
@@ -107,24 +134,64 @@ export default function NewTicket() {
 
           {!loadingWorkers && workers && workers.length > 0 && (
             <div className="worker-match-list">
-              {workers.map((w) => (
-                <button
-                  type="button"
-                  key={w._id}
-                  className={`worker-match-card ${selectedWorker === w._id ? "selected" : ""}`}
-                  onClick={() => setSelectedWorker(selectedWorker === w._id ? null : w._id)}
-                >
-                  <span className="worker-match-avatar">{w.name.charAt(0).toUpperCase()}</span>
-                  <span className="worker-match-info">
-                    <span className="worker-match-name">{w.name}</span>
-                    <span className="worker-match-meta">
-                      {w.specialization} specialist · {w.resolvedCount} resolved
-                      {w.avgRating && <> · ⭐ {w.avgRating} ({w.reviewCount})</>}
-                    </span>
-                  </span>
-                  {selectedWorker === w._id && <span className="worker-match-check">✓</span>}
-                </button>
-              ))}
+              {workers.map((w) => {
+                const isExpanded = expandedWorkerId === w._id;
+                const reviews = reviewsByWorker[w._id];
+                return (
+                  <div className={`worker-match-wrap ${isExpanded ? "expanded" : ""}`} key={w._id}>
+                    <button
+                      type="button"
+                      className={`worker-match-card ${selectedWorker === w._id ? "selected" : ""}`}
+                      onClick={() => setSelectedWorker(selectedWorker === w._id ? null : w._id)}
+                    >
+                      <span className="worker-match-avatar">{w.name.charAt(0).toUpperCase()}</span>
+                      <span className="worker-match-info">
+                        <span className="worker-match-name">{w.name}</span>
+                        <span className="worker-match-meta">
+                          {w.specialization} specialist · {w.resolvedCount} resolved
+                          {w.avgRating && <> · <IconStar /> {w.avgRating} ({w.reviewCount})</>}
+                        </span>
+                      </span>
+                      {selectedWorker === w._id && <span className="worker-match-check">✓</span>}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="worker-match-reviews-toggle"
+                      onClick={() => toggleReviews(w._id)}
+                    >
+                      {isExpanded ? "Hide reviews" : `View reviews${w.reviewCount ? ` (${w.reviewCount})` : ""}`}
+                      <span className="faq-chevron"><IconChevronDown /></span>
+                    </button>
+
+                    {isExpanded && (
+                      <div className="worker-match-reviews">
+                        {loadingReviewsFor === w._id && (
+                          <div className="spinner-wrap small">
+                            <div className="spinner" />
+                          </div>
+                        )}
+                        {loadingReviewsFor !== w._id && reviews && reviews.length === 0 && (
+                          <p className="worker-match-empty">No reviews yet for {w.name}.</p>
+                        )}
+                        {loadingReviewsFor !== w._id && reviews && reviews.length > 0 && (
+                          reviews.map((r) => (
+                            <div className="review-card" key={r._id}>
+                              <div className="review-card-title">{r.customer?.name || "Customer"}</div>
+                              <div className="star-display">
+                                {[1, 2, 3, 4, 5].map((n) => (
+                                  <span key={n} className={n <= r.rating ? "star filled" : "star"}>★</span>
+                                ))}
+                              </div>
+                              {r.comment && <p className="review-comment">"{r.comment}"</p>}
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

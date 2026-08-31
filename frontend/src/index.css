@@ -2664,6 +2664,75 @@ body::after {
   font-size: 1.1rem;
 }
 
+.worker-match-meta svg {
+  width: 12px;
+  height: 12px;
+  vertical-align: -2px;
+  color: var(--priority-medium);
+}
+
+.worker-match-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.worker-match-wrap .worker-match-card {
+  border-radius: 12px 12px 0 0;
+}
+
+.worker-match-reviews-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border-input);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.worker-match-reviews-toggle:hover {
+  color: var(--accent-1);
+}
+
+.worker-match-reviews-toggle .faq-chevron {
+  color: inherit;
+  transition: transform 0.25s ease;
+}
+
+.worker-match-reviews-toggle .faq-chevron svg {
+  width: 13px;
+  height: 13px;
+}
+
+.worker-match-wrap.expanded .worker-match-reviews-toggle .faq-chevron {
+  transform: rotate(180deg);
+}
+
+.worker-match-reviews {
+  padding: 14px;
+  background: var(--bg-primary);
+  border: 1.5px solid var(--border-input);
+  border-top: none;
+  animation: fade-in-up 0.25s ease-out both;
+}
+
+.worker-match-reviews .review-card {
+  margin-bottom: 10px;
+}
+
+.worker-match-reviews .review-card:last-child {
+  margin-bottom: 0;
+}
+
 /* ============================================
    Ticket list & badges
    ============================================ */
