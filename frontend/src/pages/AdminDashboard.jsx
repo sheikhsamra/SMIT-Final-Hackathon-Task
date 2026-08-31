@@ -34,6 +34,7 @@ export default function AdminDashboard() {
   const [warnSubmitting, setWarnSubmitting] = useState(false);
   const [warnError, setWarnError] = useState("");
   const [warningsOpen, setWarningsOpen] = useState(false);
+  const [visibleUserCount, setVisibleUserCount] = useState(8);
 
   const loadUsers = () => getAdminUsers().then(setUsers).catch(() => {});
   const loadWarnings = () => getAdminWarnings().then(setWarnings).catch(() => {});
@@ -50,6 +51,11 @@ export default function AdminDashboard() {
   }, []);
 
   const filteredUsers = (users || []).filter((u) => roleFilter === "All" || u.role === roleFilter);
+  const visibleUsers = filteredUsers.slice(0, visibleUserCount);
+
+  useEffect(() => {
+    setVisibleUserCount(8);
+  }, [roleFilter]);
 
   const handleBlock = async (u) => {
     if (!window.confirm(`Block ${u.name}? They won't be able to log in until you unblock them.`)) return;
@@ -217,7 +223,7 @@ export default function AdminDashboard() {
 
           {users && filteredUsers.length > 0 && (
             <div className="admin-user-list">
-              {filteredUsers.map((u) => (
+              {visibleUsers.map((u) => (
                 <div className={`admin-user-row ${u.isBlocked ? "blocked" : ""}`} key={u._id}>
                   <span
                     className="admin-user-avatar"
@@ -279,6 +285,16 @@ export default function AdminDashboard() {
                 </div>
               ))}
             </div>
+          )}
+
+          {users && filteredUsers.length > visibleUserCount && (
+            <button
+              type="button"
+              className="btn-secondary admin-see-more-btn"
+              onClick={() => setVisibleUserCount((c) => c + 8)}
+            >
+              See More ({filteredUsers.length - visibleUserCount} more)
+            </button>
           )}
 
         </>
