@@ -2586,6 +2586,44 @@ body::after {
   margin: 24px auto 0;
 }
 
+.ticket-form-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 32px 36px;
+  box-shadow: 0 20px 50px -28px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
+.ticket-form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--priority-medium), var(--accent-1));
+  background-size: 200% auto;
+  animation: gradient-shift 6s ease infinite;
+}
+
+.ticket-form-card .field-input,
+.ticket-form-card .field-select,
+.ticket-form-card .field-textarea {
+  padding: 13px 16px;
+  border-radius: 12px;
+}
+
+@media (max-width: 640px) {
+  .ticket-form-card {
+    padding: 24px 20px;
+  }
+}
+
 .new-ticket-page .dashboard-header {
   text-align: center;
   max-width: 640px;

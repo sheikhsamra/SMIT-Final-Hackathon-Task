@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createTicket, getMatchingWorkers, getWorkerProfile } from "../utils/tickets";
-import { IconChevronDown, IconSparkle } from "../components/Icons";
+import { IconChevronDown } from "../components/Icons";
 
 const CATEGORIES = ["General", "Billing", "Technical", "Account", "Other"];
 
@@ -78,47 +78,49 @@ export default function NewTicket() {
       {error && <p className="error-text">{error}</p>}
 
       <form onSubmit={handleSubmit} className="ticket-form">
-        <div className="form-group">
-          <label className="field-label">Subject</label>
-          <input
-            className="field-input"
-            type="text"
-            placeholder="Short summary of the issue"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            maxLength={150}
-            required
-          />
+        <div className="ticket-form-card">
+          <div className="form-group">
+            <label className="field-label">Subject</label>
+            <input
+              className="field-input"
+              type="text"
+              placeholder="Short summary of the issue"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              maxLength={150}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="field-label">Description</label>
+            <textarea
+              className="field-textarea"
+              placeholder="Explain what happened in as much detail as you can"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={5}
+              maxLength={5000}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="field-label">What is this about?</label>
+            <select
+              className="field-select"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="form-group">
-          <label className="field-label">Description</label>
-          <textarea
-            className="field-textarea"
-            placeholder="Explain what happened in as much detail as you can"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={5}
-            maxLength={5000}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="field-label">What is this about?</label>
-          <select
-            className="field-select"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label className="field-label"><IconSparkle /> Suggested Workers for {category}</label>
+          <label className="field-label">Suggested Workers for {category}</label>
 
           {loadingWorkers && (
             <div className="spinner-wrap small">
