@@ -943,7 +943,8 @@ body::after {
   z-index: 1;
 }
 
-.how-it-works-desc {
+.page .how-it-works-desc {
+  color: #ffffff;
   font-size: 0.88rem;
   line-height: 1.6;
   opacity: 0.92;
