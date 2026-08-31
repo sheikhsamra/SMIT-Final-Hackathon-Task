@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createTicket, getMatchingWorkers, getWorkerProfile } from "../utils/tickets";
-import { IconStar, IconChevronDown, IconSparkle } from "../components/Icons";
+import { IconChevronDown, IconSparkle } from "../components/Icons";
 
 const CATEGORIES = ["General", "Billing", "Technical", "Account", "Other"];
 
@@ -138,10 +138,13 @@ export default function NewTicket() {
                 const isExpanded = expandedWorkerId === w._id;
                 const reviews = reviewsByWorker[w._id];
                 return (
-                  <div className={`worker-match-wrap ${isExpanded ? "expanded" : ""}`} key={w._id}>
+                  <div
+                    className={`worker-match-wrap ${isExpanded ? "expanded" : ""} ${selectedWorker === w._id ? "selected" : ""}`}
+                    key={w._id}
+                  >
                     <button
                       type="button"
-                      className={`worker-match-card ${selectedWorker === w._id ? "selected" : ""}`}
+                      className="worker-match-card"
                       onClick={() => setSelectedWorker(selectedWorker === w._id ? null : w._id)}
                     >
                       <span className="worker-match-avatar">{w.name.charAt(0).toUpperCase()}</span>
@@ -149,7 +152,7 @@ export default function NewTicket() {
                         <span className="worker-match-name">{w.name}</span>
                         <span className="worker-match-meta">
                           {w.specialization} specialist · {w.resolvedCount} resolved
-                          {w.avgRating && <> · <IconStar /> {w.avgRating} ({w.reviewCount})</>}
+                          {w.avgRating && <> · <span className="worker-match-star">★</span> {w.avgRating} ({w.reviewCount})</>}
                         </span>
                       </span>
                       {selectedWorker === w._id && <span className="worker-match-check">✓</span>}
