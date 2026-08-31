@@ -2631,6 +2631,88 @@ body::after {
   transform: rotate(90deg);
 }
 
+/* ============================================
+   Warn modal (admin sending) + Warning alert (recipient)
+   ============================================ */
+.warn-modal-content {
+  max-width: 420px;
+}
+
+.warn-modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 34px 30px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 30px 70px -25px rgba(0, 0, 0, 0.6);
+  animation: fade-in-up 0.3s ease-out both;
+}
+
+.warn-modal-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--priority-high-rgb), 0.14);
+  color: var(--priority-high);
+  margin-bottom: 6px;
+}
+
+.warn-modal-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.warn-modal-card h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.warn-modal-card > p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.warn-modal-card .field-textarea {
+  width: 100%;
+  text-align: left;
+}
+
+.warn-modal-card .error-text {
+  width: 100%;
+  text-align: left;
+}
+
+.warn-modal-card .cta-group {
+  margin-top: 4px;
+  width: 100%;
+}
+
+.warn-modal-message {
+  width: 100%;
+  font-size: 0.98rem;
+  color: var(--text-primary);
+  background: rgba(var(--priority-high-rgb), 0.08);
+  border: 1px solid rgba(var(--priority-high-rgb), 0.25);
+  border-radius: 12px;
+  padding: 16px 18px;
+  line-height: 1.6;
+  margin: 4px 0 10px;
+}
+
+.warn-modal-card.recipient .btn-primary {
+  width: 100%;
+}
+
 .modal-content .auth-page {
   margin: 0 !important;
   width: 100% !important;

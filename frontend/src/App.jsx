@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
 import ChatWidget from "./components/ChatWidget";
+import WarningAlert from "./components/WarningAlert";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 
@@ -111,6 +112,7 @@ export default function App() {
           />
 
           <ChatWidget />
+          <WarningAlert />
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>

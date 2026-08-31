@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAdminOverview, getAdminUsers, blockUser, unblockUser, warnUser } from "../utils/admin";
 import DonutChart from "../components/DonutChart";
-import { IconUsers, IconUser, IconBriefcase, IconShield } from "../components/Icons";
+import { IconUsers, IconUser, IconBriefcase, IconShield, IconAlertTriangle } from "../components/Icons";
 
 const ROLE_FILTERS = ["All", "customer", "worker", "admin"];
 const ROLE_LABELS = { All: "All", customer: "Customers", worker: "Workers", admin: "Admins" };
@@ -28,6 +28,10 @@ export default function AdminDashboard() {
   const [roleFilter, setRoleFilter] = useState("All");
   const [actionLoadingId, setActionLoadingId] = useState(null);
   const [actionError, setActionError] = useState("");
+  const [warnTarget, setWarnTarget] = useState(null);
+  const [warnMessage, setWarnMessage] = useState("");
+  const [warnSubmitting, setWarnSubmitting] = useState(false);
+  const [warnError, setWarnError] = useState("");
 
   const loadUsers = () => getAdminUsers().then(setUsers).catch(() => {});
 
@@ -70,17 +74,29 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleWarn = async (u) => {
-    const message = window.prompt(`Warning message for ${u.name}:`, "");
-    if (!message?.trim()) return;
-    setActionLoadingId(u._id);
-    setActionError("");
+  const openWarnModal = (u) => {
+    setWarnTarget(u);
+    setWarnMessage("");
+    setWarnError("");
+  };
+
+  const closeWarnModal = () => {
+    if (warnSubmitting) return;
+    setWarnTarget(null);
+  };
+
+  const submitWarn = async (e) => {
+    e.preventDefault();
+    if (!warnMessage.trim() || !warnTarget) return;
+    setWarnSubmitting(true);
+    setWarnError("");
     try {
-      await warnUser(u._id, message.trim());
+      await warnUser(warnTarget._id, warnMessage.trim());
+      setWarnTarget(null);
     } catch (err) {
-      setActionError(err.response?.data?.message || "Could not send the warning.");
+      setWarnError(err.response?.data?.message || "Could not send the warning.");
     } finally {
-      setActionLoadingId(null);
+      setWarnSubmitting(false);
     }
   };
 
@@ -224,8 +240,7 @@ export default function AdminDashboard() {
                       <button
                         type="button"
                         className="admin-action-btn warn"
-                        onClick={() => handleWarn(u)}
-                        disabled={actionLoadingId === u._id}
+                        onClick={() => openWarnModal(u)}
                       >
                         Warn
                       </button>
@@ -256,6 +271,37 @@ export default function AdminDashboard() {
           )}
 
         </>
+      )}
+
+      {warnTarget && (
+        <div className="modal-overlay" onClick={closeWarnModal}>
+          <div className="modal-content warn-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" onClick={closeWarnModal}>&times;</button>
+            <form className="warn-modal-card" onSubmit={submitWarn}>
+              <span className="warn-modal-icon"><IconAlertTriangle /></span>
+              <h2>Warn {warnTarget.name}</h2>
+              <p>This sends them a notification with your message — they'll see it as soon as they're online.</p>
+              <textarea
+                className="field-textarea"
+                placeholder="e.g. Please respond to customer tickets faster."
+                value={warnMessage}
+                onChange={(e) => setWarnMessage(e.target.value)}
+                rows={4}
+                maxLength={500}
+                autoFocus
+              />
+              {warnError && <p className="error-text">{warnError}</p>}
+              <div className="cta-group">
+                <button type="submit" className="btn-primary" disabled={!warnMessage.trim() || warnSubmitting}>
+                  {warnSubmitting ? "Sending…" : "Send Warning"}
+                </button>
+                <button type="button" className="btn-secondary" onClick={closeWarnModal}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );
