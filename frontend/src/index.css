@@ -3426,10 +3426,30 @@ body::after {
 .chat-panel-messages {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.chat-panel-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-panel-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-panel-messages::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
+}
+
+.chat-panel-messages::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-1);
 }
 
 .chat-bubble {
@@ -3480,11 +3500,27 @@ body::after {
 
 .chat-suggestions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   padding: 0 12px 10px;
-  overflow-x: auto;
   flex-shrink: 0;
+  max-height: 100px;
+  overflow-y: auto;
   scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.chat-suggestions::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-suggestions::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-suggestions::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
 }
 
 .chat-suggestion-chip {
