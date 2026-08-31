@@ -125,6 +125,12 @@ export const IconBox = () => (
   </svg>
 );
 
+export const IconChevronDown = () => (
+  <svg {...base}>
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+);
+
 export const IconStar = () => (
   <svg {...base}>
     <path d="M12 3.5 14.7 9l6.1.9-4.4 4.3 1 6.1L12 17.3 6.6 20.3l1-6.1L3.2 9.9 9.3 9Z" />

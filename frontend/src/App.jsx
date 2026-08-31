@@ -12,6 +12,8 @@ import Home from "./pages/Home";
 // visitor only pays for Home's JS, not the whole app.
 const About = lazy(() => import("./pages/About"));
 const Services = lazy(() => import("./pages/Services"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+const Privacy = lazy(() => import("./pages/Privacy"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const NewTicket = lazy(() => import("./pages/NewTicket"));
 const MyTickets = lazy(() => import("./pages/MyTickets"));
@@ -44,6 +46,8 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home onOpenAuth={handleOpenAuth} />} />
                 <Route path="/about" element={<About onOpenAuth={handleOpenAuth} />} />
+                <Route path="/faq" element={<FAQ onOpenAuth={handleOpenAuth} />} />
+                <Route path="/privacy" element={<Privacy />} />
                 <Route path="/services" element={<Services onOpenAuth={handleOpenAuth} />} />
                 <Route
                   path="/dashboard"
