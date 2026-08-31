@@ -27,7 +27,7 @@ const SECTIONS = [
   {
     title: "Your choices",
     color: "sc-blue",
-    body: "You can delete a ticket yourself while it's still New or Pending. For any other request about your data — access, correction, or deletion — reach out to the team running this instance of Relay.",
+    body: "You can delete a ticket yourself while it's still New or Pending. For any other request about your data — access, correction, or deletion — reach out to the team running this instance of RelaySupport.",
   },
 ];
 
@@ -41,7 +41,7 @@ export default function Privacy() {
 
       <div className="about-content">
         <p>
-          Relay is a support-ticket platform built for a hackathon demo. This page explains,
+          RelaySupport is a support-ticket platform built for a hackathon demo. This page explains,
           in plain language, exactly what data the app stores and how it's used — no legal
           boilerplate, just what actually happens in the code.
         </p>

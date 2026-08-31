@@ -10,8 +10,8 @@ const CATEGORIES = [
     color: "sc-blue",
     items: [
       {
-        q: "How does Relay match my ticket to a worker?",
-        a: "When you submit a ticket, you pick a category (Billing, Technical, Account, General, or Other). Relay shows you the workers who specialize in that category, ranked by their rating and how many tickets they've resolved — you pick one, or the ticket goes into the open queue for any specialist in that category to claim.",
+        q: "How does RelaySupport match my ticket to a worker?",
+        a: "When you submit a ticket, you pick a category (Billing, Technical, Account, General, or Other). RelaySupport shows you the workers who specialize in that category, ranked by their rating and how many tickets they've resolved — you pick one, or the ticket goes into the open queue for any specialist in that category to claim.",
       },
       {
         q: "What happens after I submit a ticket?",
@@ -37,7 +37,7 @@ const CATEGORIES = [
         a: "Once a ticket is marked resolved, you can leave a 1–5 star rating and an optional comment. It's tied to that specific ticket and shows up on the worker's public profile — there's no way to review a worker without a real closed ticket behind it.",
       },
       {
-        q: "How do I become a worker on Relay?",
+        q: "How do I become a worker on RelaySupport?",
         a: "Register with the \"Worker\" role and pick a specialization (Billing, Technical, Account, or General). You'll start showing up as a suggested specialist for new tickets in that category right away.",
       },
     ],
@@ -52,8 +52,8 @@ const CATEGORIES = [
         a: "Passwords are hashed, never stored in plain text. See the full Privacy Policy for exactly what we collect and how it's used.",
       },
       {
-        q: "Is Relay free to use?",
-        a: "Yes — Relay was built for a hackathon as a demo of an AI-assisted support desk. There's no billing or paid tier.",
+        q: "Is RelaySupport free to use?",
+        a: "Yes — RelaySupport was built for a hackathon as a demo of an AI-assisted support desk. There's no billing or paid tier.",
       },
     ],
   },

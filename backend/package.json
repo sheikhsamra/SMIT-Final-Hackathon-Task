@@ -1,7 +1,7 @@
 {
   "name": "relay-backend",
   "version": "1.0.0",
-  "description": "Relay - AI-assisted customer support desk backend",
+  "description": "RelaySupport - AI-assisted customer support desk backend",
   "main": "server.js",
   "type": "module",
   "scripts": {

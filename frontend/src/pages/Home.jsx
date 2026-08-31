@@ -24,7 +24,7 @@ const STEPS = [
     color: "c-blue",
     step: "Step 2",
     title: "Get matched instantly",
-    desc: "Relay suggests the right worker for your category, rated and ranked by experience.",
+    desc: "RelaySupport suggests the right worker for your category, rated and ranked by experience.",
   },
   {
     Icon: IconCheckCircle,
@@ -121,7 +121,7 @@ export default function Home({ onOpenAuth }) {
       </div>
 
       <div className="section-header">
-        <h2 className="section-title">Why Relay</h2>
+        <h2 className="section-title">Why RelaySupport</h2>
         <p>Built for support teams that want to move fast without losing track of anything.</p>
       </div>
       <div className="features-grid">

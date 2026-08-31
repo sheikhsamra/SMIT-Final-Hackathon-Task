@@ -17,7 +17,7 @@ export default function Navbar({ onOpenAuth }) {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/">Relay</Link>
+        <Link to="/">Relay<span>Support</span></Link>
       </div>
 
       <div className="navbar-center">

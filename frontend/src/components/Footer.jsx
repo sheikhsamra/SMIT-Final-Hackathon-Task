@@ -7,7 +7,9 @@ export default function Footer() {
         <Link to="/faq">FAQ</Link>
         <Link to="/privacy">Privacy Policy</Link>
       </div>
-      <p>© {new Date().getFullYear()} Relay — Made with 💻 at the hackathon</p>
+      <p>
+        © {new Date().getFullYear()} <span className="footer-brand">Relay<span>Support</span></span> — Made with 💻 at the hackathon
+      </p>
     </footer>
   );
 }

@@ -147,7 +147,7 @@ export default function Services({ onOpenAuth }) {
 
       <div className="section-header">
         <h2 className="section-title">Why it works</h2>
-        <p>Matching a ticket to the right specialist is the whole point of Relay.</p>
+        <p>Matching a ticket to the right specialist is the whole point of RelaySupport.</p>
       </div>
       <div className="services-why-row" ref={whyRef}>
         {WHY.map((w) => (
@@ -164,7 +164,7 @@ export default function Services({ onOpenAuth }) {
       {(!user || user.role === "customer") && (
         <div className="home-cta-banner">
           <h2>Not sure which category fits?</h2>
-          <p>Submit your ticket and let Relay's AI suggest one for you.</p>
+          <p>Submit your ticket and let RelaySupport's AI suggest one for you.</p>
           {user ? (
             <Link to="/tickets/new" className="btn-primary">Submit a Ticket →</Link>
           ) : (

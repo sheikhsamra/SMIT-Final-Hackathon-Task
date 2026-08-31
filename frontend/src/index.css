@@ -200,8 +200,7 @@ body::after {
 
 .navbar-brand a {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: baseline;
   font-weight: 800;
   font-size: 1.3rem;
   text-decoration: none;
@@ -2357,6 +2356,19 @@ body::after {
 
 .footer-links a:hover {
   color: var(--accent-1);
+}
+
+.footer-brand {
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.footer-brand span {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-1));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 5s ease infinite;
 }
 
 /* ============================================

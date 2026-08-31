@@ -43,13 +43,13 @@ export default function About({ onOpenAuth }) {
   return (
     <div className="page wide-page">
       <div className="dashboard-header">
-        <h1 className="wide-page-title">About Relay</h1>
+        <h1 className="wide-page-title">About RelaySupport</h1>
         <p>A faster, more transparent way to run customer support.</p>
       </div>
 
       <div className="about-content">
         <p>
-          Relay is an AI-assisted support desk that connects customers directly with the
+          RelaySupport is an AI-assisted support desk that connects customers directly with the
           right worker for their issue — no waiting in a generic queue. When a ticket comes
           in, our system reads it, suggests a category and priority, and shows the customer
           a shortlist of specialists who can help, ranked by experience and rating.
@@ -73,7 +73,7 @@ export default function About({ onOpenAuth }) {
 
       <div className="section-header">
         <h2 className="section-title">What we stand for</h2>
-        <p>The handful of things Relay refuses to compromise on.</p>
+        <p>The handful of things RelaySupport refuses to compromise on.</p>
       </div>
       <div className="features-grid">
         {VALUES.map((v, i) => (
