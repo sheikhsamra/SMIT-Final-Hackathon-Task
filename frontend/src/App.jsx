@@ -43,7 +43,7 @@ export default function App() {
             <Suspense fallback={<RouteFallback />}>
               <Routes>
                 <Route path="/" element={<Home onOpenAuth={handleOpenAuth} />} />
-                <Route path="/about" element={<About />} />
+                <Route path="/about" element={<About onOpenAuth={handleOpenAuth} />} />
                 <Route path="/services" element={<Services onOpenAuth={handleOpenAuth} />} />
                 <Route
                   path="/dashboard"
