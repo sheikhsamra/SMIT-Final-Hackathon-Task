@@ -40,7 +40,7 @@ export default function MyTickets() {
   };
 
   return (
-    <div className="page">
+    <div className="page wide-page">
       <div className="dashboard-header">
         <h1>My Tickets</h1>
         <p>Track the status of every issue you've submitted. <span className="live-indicator"><span className="live-dot" />Live</span></p>

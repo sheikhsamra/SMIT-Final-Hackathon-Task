@@ -33,7 +33,7 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div className="page">
+    <div className="page wide-page">
       <div className="dashboard-header">
         <h1>Admin Overview</h1>
         <p>System-wide stats across every customer and worker. <span className="live-indicator"><span className="live-dot" />Live</span></p>

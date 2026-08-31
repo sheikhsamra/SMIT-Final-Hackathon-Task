@@ -41,7 +41,7 @@ export default function Dashboard() {
   const open = stats ? stats.total - (stats.byStatus?.Resolved || 0) : null;
 
   return (
-    <div className="page">
+    <div className="page wide-page">
       <div className="dashboard-header">
         <h1>Welcome back, {user?.name} 👋</h1>
         <p>This is your support dashboard — track every ticket you've submitted.</p>

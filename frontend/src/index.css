@@ -2597,6 +2597,7 @@ body::after {
 }
 
 .ticket-list {
+  max-width: 900px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -2714,6 +2715,7 @@ body::after {
 }
 
 .ticket-description-card {
+  max-width: 900px;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 16px;
@@ -2724,6 +2726,7 @@ body::after {
 }
 
 .resolution-note {
+  max-width: 900px;
   background: rgba(var(--status-resolved-rgb), 0.1);
   border: 1px solid rgba(var(--status-resolved-rgb), 0.3);
   color: var(--text-primary);
@@ -2757,6 +2760,7 @@ body::after {
 }
 
 .review-card {
+  max-width: 900px;
   background: rgba(var(--priority-medium-rgb), 0.08);
   border: 1px solid rgba(var(--priority-medium-rgb), 0.3);
   border-radius: 12px;
@@ -2818,6 +2822,7 @@ body::after {
    Agent controls (ticket detail)
    ============================================ */
 .agent-panel {
+  max-width: 900px;
   background: var(--bg-card);
   border: 1px solid var(--border-strong);
   border-radius: 16px;
@@ -2914,6 +2919,7 @@ body::after {
 }
 
 .conversation {
+  max-width: 900px;
   display: flex;
   flex-direction: column;
   gap: 14px;

@@ -55,7 +55,7 @@ export default function WorkerDashboard() {
   );
 
   return (
-    <div className="page">
+    <div className="page wide-page">
       <div className="dashboard-header">
         <h1>Worker Dashboard</h1>
         <p>All incoming tickets, sorted by newest first. <span className="live-indicator"><span className="live-dot" />Live</span></p>

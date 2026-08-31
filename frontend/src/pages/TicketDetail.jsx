@@ -220,7 +220,7 @@ export default function TicketDetail() {
   const canDelete = isMyTicket && DELETABLE_STATUSES.includes(ticket.status);
 
   return (
-    <div className="page">
+    <div className="page wide-page">
       <Link to={isWorkerRole ? "/worker" : "/tickets"} className="back-link">
         ← Back to {isWorkerRole ? "Worker Dashboard" : "My Tickets"}
       </Link>

@@ -42,7 +42,7 @@ export default function NewTicket() {
   };
 
   return (
-    <div className="page">
+    <div className="page wide-page">
       <div className="dashboard-header">
         <h1>Submit a Ticket</h1>
         <p>Describe your issue and pick who should handle it.</p>
