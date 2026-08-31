@@ -1028,6 +1028,7 @@ body::after {
 .home-cta-banner p {
   opacity: 0.9;
   margin-bottom: 24px;
+  color: #ffffff;
 }
 
 .home-cta-banner .btn-primary {
@@ -1039,7 +1040,7 @@ body::after {
 .home-cta-banner .btn-primary:hover {
   filter: none;
   transform: translateY(-3px);
-  background: #ffffff;
+  background: #ececec;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -2003,6 +2004,136 @@ body::after {
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 16px;
+}
+
+/* ============================================
+   Admin — all users list
+   ============================================ */
+.admin-users-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+.admin-users-header .section-title {
+  margin-bottom: 0;
+}
+
+.admin-role-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-role-filter-btn {
+  padding: 7px 16px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--border-input);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-role-filter-btn:hover {
+  border-color: var(--accent-1);
+}
+
+.admin-role-filter-btn.active {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.admin-user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 18px 0 40px;
+}
+
+.admin-user-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 14px 20px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  animation: fade-in-up 0.3s ease-out both;
+}
+
+.admin-user-row:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+  box-shadow: 0 14px 28px -18px rgba(0, 0, 0, 0.35);
+}
+
+.admin-user-avatar {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--btn-text);
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  background-size: cover;
+  background-position: center;
+}
+
+.admin-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-user-name {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.admin-user-email {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-user-stat {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.admin-user-stat svg {
+  width: 12px;
+  height: 12px;
+}
+
+@media (max-width: 640px) {
+  .admin-user-row {
+    flex-wrap: wrap;
+  }
+  .admin-user-stat {
+    width: 100%;
+    text-align: left;
+    margin-left: 56px;
+  }
 }
 
 .donut-chart-wrap {

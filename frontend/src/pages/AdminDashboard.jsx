@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAdminOverview } from "../utils/admin";
+import { getAdminOverview, getAdminUsers } from "../utils/admin";
 import DonutChart from "../components/DonutChart";
 import { IconUsers, IconUser, IconBriefcase, IconShield } from "../components/Icons";
+
+const ROLE_FILTERS = ["All", "customer", "worker", "admin"];
+const ROLE_LABELS = { All: "All", customer: "Customers", worker: "Workers", admin: "Admins" };
 
 const STATUS_COLORS = {
   New: "var(--status-new)",
@@ -21,16 +24,21 @@ const PRIORITY_COLORS = {
 
 export default function AdminDashboard() {
   const [overview, setOverview] = useState(null);
+  const [users, setUsers] = useState(null);
   const [error, setError] = useState("");
+  const [roleFilter, setRoleFilter] = useState("All");
 
   useEffect(() => {
-    const load = () => getAdminOverview().then(setOverview).catch((err) => setError(err.response?.data?.message || "Could not load overview."));
+    const load = () => {
+      getAdminOverview().then(setOverview).catch((err) => setError(err.response?.data?.message || "Could not load overview."));
+      getAdminUsers().then(setUsers).catch(() => {});
+    };
     load();
-    const interval = setInterval(() => {
-      getAdminOverview().then(setOverview).catch(() => {});
-    }, 8000);
+    const interval = setInterval(load, 8000);
     return () => clearInterval(interval);
   }, []);
+
+  const filteredUsers = (users || []).filter((u) => roleFilter === "All" || u.role === roleFilter);
 
   return (
     <div className="page wide-page">
@@ -104,6 +112,67 @@ export default function AdminDashboard() {
               />
             </div>
           </div>
+
+          <div className="admin-users-header">
+            <h2 className="section-title">All Users</h2>
+            <div className="admin-role-filters">
+              {ROLE_FILTERS.map((r) => (
+                <button
+                  type="button"
+                  key={r}
+                  className={`admin-role-filter-btn ${roleFilter === r ? "active" : ""}`}
+                  onClick={() => setRoleFilter(r)}
+                >
+                  {ROLE_LABELS[r]}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {!users && (
+            <div className="spinner-wrap">
+              <div className="spinner" />
+            </div>
+          )}
+
+          {users && filteredUsers.length === 0 && (
+            <div className="empty-state">
+              <span className="empty-state-icon">👥</span>
+              <p>No {ROLE_LABELS[roleFilter].toLowerCase()} yet.</p>
+            </div>
+          )}
+
+          {users && filteredUsers.length > 0 && (
+            <div className="admin-user-list">
+              {filteredUsers.map((u) => (
+                <div className="admin-user-row" key={u._id}>
+                  <span
+                    className="admin-user-avatar"
+                    style={u.avatar ? { backgroundImage: `url(${u.avatar})` } : undefined}
+                  >
+                    {!u.avatar && u.name.charAt(0).toUpperCase()}
+                  </span>
+                  <div className="admin-user-info">
+                    <span className="admin-user-name">{u.name}</span>
+                    <span className="admin-user-email">{u.email}</span>
+                  </div>
+                  <span className={`profile-role-badge role-${u.role}`}>{u.role}</span>
+                  <div className="admin-user-stat">
+                    {u.role === "customer" && (
+                      <span>{u.ticketCount} ticket{u.ticketCount === 1 ? "" : "s"} submitted</span>
+                    )}
+                    {u.role === "worker" && (
+                      <span>
+                        {u.specialization} · {u.resolvedCount} resolved
+                        {u.avgRating && <> · <span className="worker-match-star">★</span> {u.avgRating} ({u.reviewCount})</>}
+                      </span>
+                    )}
+                    {u.role === "admin" && <span>Administrator</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="cta-group dashboard-cta">
             <Link to="/worker" className="btn-primary">Manage Tickets →</Link>

@@ -14,7 +14,7 @@ const demoUsers = [
   { name: "Ayesha (Technical)", email: "technical@relay.test", password: "worker1234", role: "worker", specialization: "Technical" },
   { name: "Hamza (Account)", email: "account@relay.test", password: "worker1234", role: "worker", specialization: "Account" },
   { name: "Sara (General)", email: "general@relay.test", password: "worker1234", role: "worker", specialization: "General" },
-  { name: "Demo Admin", email: "admin@relay.test", password: "admin1234", role: "admin" },
+  { name: "RelaySupport Admin", email: "admin@relaysupport.test", password: "admin1234", role: "admin" },
 ];
 
 const run = async () => {
