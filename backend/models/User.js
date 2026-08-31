@@ -5,8 +5,23 @@ const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-    password: { type: String, required: true, minlength: 6 },
+    // Not required for a Google account — there's no password to check,
+    // Google already authenticated them.
+    password: {
+      type: String,
+      minlength: 6,
+      required: function () {
+        return this.authProvider === "local";
+      },
+    },
     role: { type: String, enum: ["customer", "worker", "admin"], default: "customer" },
+    // "google" accounts skip the email-verification-code flow — Google
+    // already confirmed the address — and have no password to match.
+    authProvider: { type: String, enum: ["local", "google"], default: "local" },
+    googleId: { type: String, default: null },
+    isVerified: { type: Boolean, default: false },
+    verificationCode: { type: String, default: null, select: false },
+    verificationCodeExpires: { type: Date, default: null, select: false },
     // Only meaningful for workers — which ticket category they handle, used
     // to match them against a customer's ticket.
     specialization: {

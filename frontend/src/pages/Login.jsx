@@ -1,26 +1,35 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import GoogleSignInButton from "../components/GoogleSignInButton";
 
 const DASHBOARD_BY_ROLE = { customer: "/dashboard", worker: "/worker", admin: "/admin" };
 
-export default function Login({ onSuccess, onSwitchToRegister }) {
+export default function Login({ onSuccess, onSwitchToRegister, onNeedsVerification }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSubmitting(true);
     try {
       const data = await login(email, password);
       if (onSuccess) onSuccess();
       navigate(DASHBOARD_BY_ROLE[data.role] || "/dashboard");
     } catch (err) {
+      if (err.response?.data?.needsVerification) {
+        onNeedsVerification(err.response.data.email);
+        return;
+      }
       setError(err.response?.data?.message || "Login failed. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -74,8 +83,12 @@ export default function Login({ onSuccess, onSwitchToRegister }) {
           </span>
         </div>
 
-        <button type="submit" className="auth-submit-btn">Login</button>
+        <button type="submit" className="auth-submit-btn" disabled={submitting}>
+          {submitting ? "Logging in…" : "Login"}
+        </button>
       </form>
+
+      <GoogleSignInButton onError={setError} onSuccess={onSuccess} />
 
       <p className="auth-switch-text">
         Don't have an account?{" "}

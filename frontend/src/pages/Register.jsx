@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import GoogleSignInButton from "../components/GoogleSignInButton";
 
-const DASHBOARD_BY_ROLE = { customer: "/dashboard", worker: "/worker", admin: "/admin" };
-
-export default function Register({ onSuccess, onSwitchToLogin }) {
+export default function Register({ onSuccess, onSwitchToLogin, onNeedsVerification }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,18 +10,20 @@ export default function Register({ onSuccess, onSwitchToLogin }) {
   const [role, setRole] = useState("customer");
   const [specialization, setSpecialization] = useState("Billing");
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const { register } = useAuth();
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSubmitting(true);
     try {
       const data = await register(name, email, password, role, specialization);
-      if (onSuccess) onSuccess();
-      navigate(DASHBOARD_BY_ROLE[data.role] || "/dashboard");
+      onNeedsVerification(data.email);
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -122,8 +122,12 @@ export default function Register({ onSuccess, onSwitchToLogin }) {
           </span>
         </div>
 
-        <button type="submit" className="auth-submit-btn">Register</button>
+        <button type="submit" className="auth-submit-btn" disabled={submitting}>
+          {submitting ? "Creating…" : "Register"}
+        </button>
       </form>
+
+      <GoogleSignInButton onError={setError} onSuccess={onSuccess} />
 
       <p className="auth-switch-text">
         Already have an account?{" "}
