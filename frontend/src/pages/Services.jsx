@@ -109,9 +109,7 @@ export default function Services({ onOpenAuth }) {
   return (
     <div className="page wide-page">
       <div className="dashboard-header" ref={headerRef}>
-        <h1>
-          One <span className="hero-highlight">category</span>, one specialist
-        </h1>
+        <h1 className="wide-page-title">One category, one specialist</h1>
         <p>
           Every ticket is matched to a worker who handles exactly this kind of problem —
           no generalists, no guesswork.

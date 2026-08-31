@@ -669,6 +669,23 @@ body::after {
   animation: fade-in-up 0.6s ease-out both, gradient-shift 6s ease infinite 0.6s;
 }
 
+/* A page like Services wants its whole h1 vividly gradient and bigger,
+   not the subtler text-primary-heavy blend .page h1 uses everywhere else. */
+.page .wide-page-title {
+  font-size: 3.2rem;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fade-in-up 0.6s ease-out both, gradient-shift 5s ease infinite 0.6s;
+}
+
+@media (max-width: 640px) {
+  .page .wide-page-title {
+    font-size: 2.2rem;
+  }
+}
+
 .page p {
   color: var(--text-secondary);
   font-size: 1.1rem;
@@ -913,11 +930,17 @@ body::after {
 .section-header {
   text-align: center;
   max-width: 560px;
-  margin: 64px auto 32px;
+  margin: 88px auto 36px;
 }
 
 .section-header .section-title {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  font-size: 2.1rem;
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 5s ease infinite;
 }
 
 .section-header p {
@@ -926,7 +949,7 @@ body::after {
 }
 
 .how-it-works-row {
-  margin-bottom: 56px;
+  margin-bottom: 80px;
 }
 
 .how-it-works-step {
@@ -988,7 +1011,7 @@ body::after {
 }
 
 .home-cta-banner {
-  margin: 64px 0 24px;
+  margin: 88px 0 24px;
   padding: 48px 40px;
   border-radius: 24px;
   text-align: center;
@@ -1122,7 +1145,7 @@ body::after {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 20px;
-  margin-bottom: 48px;
+  margin-bottom: 64px;
 }
 
 .services-why-card {
@@ -1299,7 +1322,7 @@ body::after {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
-  margin-top: 24px;
+  margin: 24px 0 32px;
 }
 
 .feature-card {
