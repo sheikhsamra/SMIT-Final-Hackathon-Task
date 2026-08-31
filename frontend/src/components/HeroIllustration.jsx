@@ -31,19 +31,23 @@ export default function HeroIllustration() {
       </g>
 
       {/* Floating AI badge */}
-      <g className="hero-badge-bob" transform="translate(300, 245)">
-        <rect x="0" y="0" width="90" height="40" rx="20" fill="var(--accent-1)" />
-        <text x="45" y="25" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--btn-text)" fontFamily="inherit">
-          AI Matched
-        </text>
+      <g transform="translate(300, 245)">
+        <g className="hero-badge-bob">
+          <rect x="0" y="0" width="90" height="40" rx="20" fill="var(--accent-1)" />
+          <text x="45" y="25" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--btn-text)" fontFamily="inherit">
+            AI Matched
+          </text>
+        </g>
       </g>
 
       {/* Floating rating badge */}
-      <g className="hero-badge-sway" transform="translate(10, 20)">
-        <rect x="0" y="0" width="76" height="34" rx="17" fill="var(--bg-card)" stroke="var(--border-strong)" />
-        <text x="38" y="22" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--priority-medium)" fontFamily="inherit">
-          ★ 4.9
-        </text>
+      <g transform="translate(10, 20)">
+        <g className="hero-badge-sway">
+          <rect x="0" y="0" width="76" height="34" rx="17" fill="var(--bg-card)" stroke="var(--border-strong)" />
+          <text x="38" y="22" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--priority-medium)" fontFamily="inherit">
+            ★ 4.9
+          </text>
+        </g>
       </g>
     </svg>
   );
