@@ -2257,11 +2257,37 @@ body::after {
   max-width: 560px;
 }
 
+.warnings-history-modal .warn-modal-card {
+  padding: 22px 22px 26px;
+  gap: 6px;
+}
+
+.warnings-history-modal .warn-modal-icon {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 2px;
+}
+
+.warnings-history-modal .warn-modal-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.warnings-history-modal .warn-modal-card h2 {
+  font-size: 1.05rem;
+}
+
 .warnings-history-modal .admin-warning-list {
-  max-height: 400px;
+  max-height: min(280px, 40vh);
   overflow-y: auto;
+  margin: 12px 0 18px;
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
+}
+
+.warnings-history-modal .admin-warning-row {
+  padding: 12px 14px;
+  text-align: left;
 }
 
 .warnings-history-modal .admin-warning-list::-webkit-scrollbar {
