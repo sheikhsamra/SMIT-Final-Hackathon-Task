@@ -33,6 +33,7 @@ export default function AdminDashboard() {
   const [warnMessage, setWarnMessage] = useState("");
   const [warnSubmitting, setWarnSubmitting] = useState(false);
   const [warnError, setWarnError] = useState("");
+  const [warningsOpen, setWarningsOpen] = useState(false);
 
   const loadUsers = () => getAdminUsers().then(setUsers).catch(() => {});
   const loadWarnings = () => getAdminWarnings().then(setWarnings).catch(() => {});
@@ -106,9 +107,15 @@ export default function AdminDashboard() {
 
   return (
     <div className="page wide-page">
-      <div className="dashboard-header">
-        <h1>Admin Overview</h1>
-        <p>System-wide stats across every customer and worker. <span className="live-indicator"><span className="live-dot" />Live</span></p>
+      <div className="dashboard-header admin-header-row">
+        <div>
+          <h1>Admin Overview</h1>
+          <p>System-wide stats across every customer and worker. <span className="live-indicator"><span className="live-dot" />Live</span></p>
+        </div>
+        <button type="button" className="btn-secondary admin-warnings-trigger" onClick={() => setWarningsOpen(true)}>
+          <IconAlertTriangle /> Warnings
+          {warnings && warnings.length > 0 && <span className="notification-badge">{warnings.length}</span>}
+        </button>
       </div>
 
       {error && <p className="error-text">{error}</p>}
@@ -274,34 +281,47 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          <h2 className="section-title">Warning History</h2>
-          {warnings && warnings.length === 0 && (
-            <div className="empty-state">
-              <span className="empty-state-icon">✅</span>
-              <p>No warnings have been sent yet.</p>
-            </div>
-          )}
-
-          {warnings && warnings.length > 0 && (
-            <div className="admin-warning-list">
-              {warnings.map((w) => (
-                <div className="admin-warning-row" key={w._id}>
-                  <span className="admin-warning-icon"><IconAlertTriangle /></span>
-                  <div className="admin-warning-body">
-                    <div className="admin-warning-top">
-                      <span className="admin-warning-recipient">
-                        {w.user?.name || "Deleted user"}
-                        {w.user?.email && <span className="admin-user-email"> · {w.user.email}</span>}
-                      </span>
-                      <span className="admin-warning-time">{new Date(w.createdAt).toLocaleString()}</span>
-                    </div>
-                    <p className="admin-warning-message">{w.message}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </>
+      )}
+
+      {warningsOpen && (
+        <div className="modal-overlay" onClick={() => setWarningsOpen(false)}>
+          <div className="modal-content warnings-history-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" onClick={() => setWarningsOpen(false)}>&times;</button>
+            <div className="warn-modal-card recipient">
+              <span className="warn-modal-icon"><IconAlertTriangle /></span>
+              <h2>Warning History</h2>
+
+              {warnings && warnings.length === 0 && (
+                <p className="warnings-empty">No warnings have been sent yet.</p>
+              )}
+
+              {warnings && warnings.length > 0 && (
+                <div className="admin-warning-list">
+                  {warnings.map((w) => (
+                    <div className="admin-warning-row" key={w._id}>
+                      <span className="admin-warning-icon"><IconAlertTriangle /></span>
+                      <div className="admin-warning-body">
+                        <div className="admin-warning-top">
+                          <span className="admin-warning-recipient">
+                            {w.user?.name || "Deleted user"}
+                            {w.user?.email && <span className="admin-user-email"> · {w.user.email}</span>}
+                          </span>
+                          <span className="admin-warning-time">{new Date(w.createdAt).toLocaleString()}</span>
+                        </div>
+                        <p className="admin-warning-message">{w.message}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <button type="button" className="btn-primary" onClick={() => setWarningsOpen(false)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {warnTarget && (

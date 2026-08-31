@@ -5,7 +5,10 @@ import { useAuth } from "../context/AuthContext";
 // Pass roles={["worker", "admin"]} to also restrict it to specific roles.
 export default function ProtectedRoute({ children, roles }) {
   const { user } = useAuth();
-  if (!user) return <Navigate to="/login" replace />;
+  // There's no standalone "/login" route — logging in only happens via the
+  // navbar's modal — so an unauthenticated visitor goes back to the home
+  // page instead of a route that doesn't exist.
+  if (!user) return <Navigate to="/" replace />;
   if (roles && !roles.includes(user.role)) return <Navigate to="/dashboard" replace />;
   return children;
 }

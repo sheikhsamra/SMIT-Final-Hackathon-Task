@@ -2204,6 +2204,52 @@ body::after {
   }
 }
 
+.admin-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-warnings-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.admin-warnings-trigger svg {
+  width: 16px;
+  height: 16px;
+}
+
+.admin-warnings-trigger .notification-badge {
+  position: static;
+  margin-left: 2px;
+}
+
+.warnings-history-modal {
+  max-width: 560px;
+}
+
+.warnings-history-modal .admin-warning-list {
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.warnings-history-modal .admin-warning-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.warnings-history-modal .admin-warning-list::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
+}
+
 .admin-warning-list {
   display: flex;
   flex-direction: column;
