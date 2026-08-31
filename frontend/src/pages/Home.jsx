@@ -7,6 +7,12 @@ export default function Home({ onOpenAuth }) {
 
   return (
     <div className="page hero-page">
+      <div className="hero-bg-blobs" aria-hidden="true">
+        <span className="hero-blob hero-blob-1" />
+        <span className="hero-blob hero-blob-2" />
+        <span className="hero-blob hero-blob-3" />
+      </div>
+
       <div className="hero-split">
         <div className="hero-text">
           <span className="hero-badge">🎫 AI-Assisted Support Desk</span>
