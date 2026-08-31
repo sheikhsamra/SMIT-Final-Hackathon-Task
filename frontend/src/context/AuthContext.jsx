@@ -16,27 +16,8 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
-  // Registering no longer logs you in directly — the account needs its
-  // email verified first. The response is just { needsVerification, email }.
   const register = async (name, email, password, role, specialization) => {
     const { data } = await api.post("/auth/register", { name, email, password, role, specialization });
-    return data;
-  };
-
-  const verifyEmail = async (email, code) => {
-    const { data } = await api.post("/auth/verify-email", { email, code });
-    localStorage.setItem("user", JSON.stringify(data));
-    setUser(data);
-    return data;
-  };
-
-  const resendVerification = async (email) => {
-    const { data } = await api.post("/auth/resend-verification", { email });
-    return data;
-  };
-
-  const googleLogin = async (credential) => {
-    const { data } = await api.post("/auth/google", { credential });
     localStorage.setItem("user", JSON.stringify(data));
     setUser(data);
     return data;
@@ -58,9 +39,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, login, register, verifyEmail, resendVerification, googleLogin, logout, updateProfile }}
-    >
+    <AuthContext.Provider value={{ user, login, register, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );

@@ -2685,49 +2685,6 @@ body::after {
   opacity: 0.85;
 }
 
-.verify-code-input {
-  text-align: center;
-  font-size: 1.6rem;
-  font-weight: 800;
-  letter-spacing: 10px;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.verify-resent-note {
-  color: var(--status-resolved);
-  font-size: 0.85rem;
-  margin-bottom: 4px;
-}
-
-.google-signin-wrap {
-  margin-top: 6px;
-}
-
-.auth-divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 18px 0 14px;
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.auth-divider::before,
-.auth-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border-color);
-}
-
-.google-signin-btn {
-  display: flex;
-  justify-content: center;
-  min-height: 44px;
-}
-
 .error-text {
   display: block;
   color: var(--accent-error);
