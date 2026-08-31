@@ -684,9 +684,27 @@ body::after {
   padding-bottom: 56px;
 }
 
+/* The hero page has more sections than a plain narrow content page, so it
+   breaks out of .main-content's 960px cap to use the full screen width —
+   every other page keeps that cap untouched. */
+.main-content:has(.hero-page) {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .hero-page {
-  max-width: 1100px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 48px;
   position: relative;
+}
+
+@media (max-width: 640px) {
+  .hero-page {
+    padding: 0 20px;
+  }
 }
 
 .hero-bg-blobs {
