@@ -1,4 +1,5 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import NotificationBell from "./NotificationBell";
@@ -8,11 +9,21 @@ export default function Navbar({ onOpenAuth }) {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = () => {
+    setMenuOpen(false);
     logout();
     navigate("/");
   };
+
+  const linkClass = ({ isActive }) => (isActive ? "active" : "");
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <nav className="navbar">
@@ -20,39 +31,68 @@ export default function Navbar({ onOpenAuth }) {
         <Link to="/">Relay<span>Support</span></Link>
       </div>
 
-      <div className="navbar-center">
-        <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
+      <div className={`navbar-center ${menuOpen ? "mobile-open" : ""}`}>
+        <NavLink to="/" end className={linkClass} onClick={closeMenu}>
           Home
         </NavLink>
-        <NavLink to="/services" className={({ isActive }) => (isActive ? "active" : "")}>
+        <NavLink to="/services" className={linkClass} onClick={closeMenu}>
           Services
         </NavLink>
-        <NavLink to="/about" className={({ isActive }) => (isActive ? "active" : "")}>
+        <NavLink to="/about" className={linkClass} onClick={closeMenu}>
           About
         </NavLink>
-        <NavLink to="/faq" className={({ isActive }) => (isActive ? "active" : "")}>
+        <NavLink to="/faq" className={linkClass} onClick={closeMenu}>
           FAQ
         </NavLink>
         {user?.role === "customer" && (
           <>
-            <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink to="/dashboard" className={linkClass} onClick={closeMenu}>
               Dashboard
             </NavLink>
-            <NavLink to="/tickets" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink to="/tickets" className={linkClass} onClick={closeMenu}>
               My Tickets
             </NavLink>
           </>
         )}
         {user?.role === "admin" && (
-          <NavLink to="/admin" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink to="/admin" className={linkClass} onClick={closeMenu}>
             Admin
           </NavLink>
         )}
         {user?.role === "worker" && (
-          <NavLink to="/worker" className={({ isActive }) => (isActive ? "active" : "")}>
+          <NavLink to="/worker" className={linkClass} onClick={closeMenu}>
             Worker Dashboard
           </NavLink>
         )}
+
+        {/* Mobile-only: the rest of navbar-actions is hidden above this width,
+            so the same actions are repeated inside the slide-down menu. */}
+        <div className="navbar-mobile-actions">
+          {user ? (
+            <>
+              <span className="navbar-username mobile">
+                Hi, {user.name}
+                {user.role !== "customer" && <span className="role-tag">{user.role}</span>}
+              </span>
+              <button onClick={handleLogout} className="btn-link">Logout</button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => { closeMenu(); onOpenAuth("login"); }}
+                className="nav-btn-trigger"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => { closeMenu(); onOpenAuth("register"); }}
+                className="nav-btn-trigger register-btn"
+              >
+                Register
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="navbar-actions">
@@ -69,14 +109,14 @@ export default function Navbar({ onOpenAuth }) {
         {user ? (
           <>
             <NotificationBell />
-            <span className="navbar-username">
+            <span className="navbar-username desktop-only">
               Hi, {user.name}
               {user.role !== "customer" && <span className="role-tag">{user.role}</span>}
             </span>
-            <button onClick={handleLogout} className="btn-link">Logout</button>
+            <button onClick={handleLogout} className="btn-link desktop-only">Logout</button>
           </>
         ) : (
-          <>
+          <span className="desktop-only navbar-auth-btns">
             <button
               onClick={() => onOpenAuth("login")}
               className="nav-btn-trigger"
@@ -89,8 +129,19 @@ export default function Navbar({ onOpenAuth }) {
             >
               Register
             </button>
-          </>
+          </span>
         )}
+        <button
+          type="button"
+          className={`navbar-hamburger ${menuOpen ? "open" : ""}`}
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </div>
     </nav>
   );

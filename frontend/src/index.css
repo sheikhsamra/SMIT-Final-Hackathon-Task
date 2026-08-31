@@ -304,6 +304,53 @@ body::after {
   animation: glow-pulse 2.4s ease-in-out infinite;
 }
 
+.navbar-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.navbar-hamburger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--text-primary);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.navbar-hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.navbar-hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.navbar-mobile-actions {
+  display: none;
+}
+
+.navbar-auth-btns {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .role-tag {
   background: var(--accent-1);
   color: var(--btn-text);
@@ -2225,6 +2272,19 @@ body::after {
 @media (max-width: 760px) {
   .admin-user-row {
     flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .admin-user-info {
+    flex-basis: calc(100% - 56px);
+  }
+  .profile-role-badge {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .admin-user-stat {
+    width: 100%;
+    margin-left: 56px;
+    text-align: left;
   }
   .admin-user-actions {
     width: 100%;
@@ -3768,9 +3828,6 @@ body::after {
 @media (max-width: 768px) {
   .navbar {
     padding: 12px 20px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    row-gap: 10px;
   }
 
   .navbar-brand,
@@ -3779,16 +3836,70 @@ body::after {
   }
 
   .navbar-actions {
-    gap: 10px;
+    gap: 8px;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .navbar-hamburger {
+    display: flex;
   }
 
   .navbar-center {
-    order: 3;
-    flex: 1 1 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--bg-navbar);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.4);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-height 0.3s ease, opacity 0.25s ease;
   }
 
-  .navbar-username {
+  .navbar-center.mobile-open {
+    max-height: 80vh;
+    overflow-y: auto;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .navbar-center a {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+  }
+
+  .navbar-center a::after {
     display: none;
+  }
+
+  .navbar-center a:hover {
+    transform: none;
+    background: rgba(var(--accent-1-rgb), 0.06);
+  }
+
+  .navbar-mobile-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    flex-wrap: wrap;
+  }
+
+  .navbar-mobile-actions .navbar-username.mobile {
+    display: flex;
   }
 
   .main-content {
@@ -3843,8 +3954,7 @@ body::after {
   }
 
   .navbar-center a {
-    padding: 6px 12px;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
 
   .navbar-actions {
@@ -3902,7 +4012,7 @@ body::after {
 
 .chat-panel {
   width: min(360px, calc(100vw - 48px));
-  height: min(500px, calc(100vh - 140px));
+  height: min(500px, calc(100dvh - 140px));
   display: flex;
   flex-direction: column;
   background: var(--bg-card);
@@ -4155,7 +4265,35 @@ body::after {
 
 @media (max-width: 480px) {
   .chat-widget {
-    right: 16px;
-    bottom: 16px;
+    right: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: 12px;
+    align-items: stretch;
+  }
+
+  .chat-fab {
+    align-self: flex-end;
+  }
+
+  .chat-panel {
+    width: 100%;
+    height: min(72dvh, calc(100dvh - 96px));
+  }
+
+  .chat-panel-header {
+    padding: 14px 16px;
+  }
+
+  .chat-panel-title {
+    font-size: 0.88rem;
+  }
+
+  .chat-bubble {
+    max-width: 88%;
+    font-size: 0.84rem;
+  }
+
+  .chat-suggestions {
+    max-height: 84px;
   }
 }
