@@ -145,7 +145,7 @@ export default function WorkerDashboard() {
           <ProfileCard
             extraMeta={
               profile?.specialization && (
-                <div className="profile-meta" style={{ borderTop: "none", paddingTop: 0, marginTop: 4 }}>
+                <div className="profile-meta profile-meta-tight">
                   Specializes in {profile.specialization}
                 </div>
               )

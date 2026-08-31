@@ -67,6 +67,8 @@ export default function ProfileCard({ extraMeta }) {
 
   return (
     <div className="sidebar-card profile-card">
+      <div className="profile-cover" />
+
       <div className="profile-avatar-wrap">
         <div
           className="profile-avatar"
@@ -86,46 +88,48 @@ export default function ProfileCard({ extraMeta }) {
         <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleFileChange} />
       </div>
 
-      {editingName ? (
-        <div className="profile-name-edit">
-          <input
-            className="field-input"
-            value={nameInput}
-            onChange={(e) => setNameInput(e.target.value)}
-            maxLength={60}
-            autoFocus
-          />
-          <div className="cta-group profile-name-edit-actions">
-            <button type="button" className="btn-primary" onClick={handleSaveName} disabled={saving}>
-              {saving ? "Saving…" : "Save"}
-            </button>
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={() => {
-                setEditingName(false);
-                setNameInput(user?.name || "");
-              }}
-            >
-              Cancel
+      <div className="profile-body">
+        {editingName ? (
+          <div className="profile-name-edit">
+            <input
+              className="field-input"
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+              maxLength={60}
+              autoFocus
+            />
+            <div className="cta-group profile-name-edit-actions">
+              <button type="button" className="btn-primary" onClick={handleSaveName} disabled={saving}>
+                {saving ? "Saving…" : "Save"}
+              </button>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => {
+                  setEditingName(false);
+                  setNameInput(user?.name || "");
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="profile-name-row">
+            <span className="profile-name">{user?.name}</span>
+            <button type="button" className="profile-edit-btn" onClick={() => setEditingName(true)} aria-label="Edit name">
+              <IconPencil />
             </button>
           </div>
-        </div>
-      ) : (
-        <div className="profile-name-row">
-          <span className="profile-name">{user?.name}</span>
-          <button type="button" className="profile-edit-btn" onClick={() => setEditingName(true)} aria-label="Edit name">
-            <IconPencil />
-          </button>
-        </div>
-      )}
+        )}
 
-      <div className="profile-email">{user?.email}</div>
-      <span className="stat-badge">{user?.role}</span>
-      {extraMeta}
-      {error && <p className="error-text profile-error">{error}</p>}
-      <div className="profile-meta">
-        Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
+        <div className="profile-email">{user?.email}</div>
+        <span className={`profile-role-badge role-${user?.role}`}>{user?.role}</span>
+        {extraMeta}
+        {error && <p className="error-text profile-error">{error}</p>}
+        <div className="profile-meta">
+          Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
+        </div>
       </div>
     </div>
   );

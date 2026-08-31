@@ -100,7 +100,15 @@ export default function Dashboard() {
         </div>
 
         <div className="dashboard-sidebar">
-          <ProfileCard />
+          <ProfileCard
+            extraMeta={
+              stats && (
+                <div className="profile-meta profile-meta-tight">
+                  {stats.total} ticket{stats.total === 1 ? "" : "s"} submitted
+                </div>
+              )
+            }
+          />
 
           {stats && stats.total > 0 && (
             <div className="sidebar-card">
