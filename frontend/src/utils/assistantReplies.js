@@ -99,10 +99,28 @@ const FALLBACKS = [
   "Hmm, I don't have a canned answer for that yet. Try rephrasing, or ask me about submitting a ticket, checking status, reviews, or becoming a worker.",
 ];
 
+// Predefined questions shown as clickable chips so a user always has an
+// obvious next thing to ask, and never has to guess wording.
+export const SUGGESTED_QUESTIONS = [
+  "How do I submit a complaint?",
+  "How does worker matching work?",
+  "How do I track my ticket?",
+  "How do I leave a review?",
+  "How do I become a worker?",
+  "Is this free to use?",
+];
+
+const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+// Whole-word/phrase matching — a plain substring check would let short
+// keywords like "hi" match inside unrelated words (e.g. "this", "chip"),
+// so every keyword is wrapped with \b word boundaries before testing.
+const mentionsKeyword = (text, keyword) => new RegExp(`\\b${escapeRegex(keyword)}\\b`, "i").test(text);
 
 export const getAssistantReply = (message) => {
   const text = message.toLowerCase();
-  const topic = TOPICS.find((t) => t.keywords.some((k) => text.includes(k)));
+  const topic = TOPICS.find((t) => t.keywords.some((k) => mentionsKeyword(text, k)));
   return topic ? pick(topic.replies) : pick(FALLBACKS);
 };

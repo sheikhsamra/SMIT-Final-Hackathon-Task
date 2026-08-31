@@ -3478,6 +3478,35 @@ body::after {
   30% { transform: translateY(-5px); opacity: 1; }
 }
 
+.chat-suggestions {
+  display: flex;
+  gap: 8px;
+  padding: 0 12px 10px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  scrollbar-width: thin;
+}
+
+.chat-suggestion-chip {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 7px 14px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--border-input);
+  background: var(--bg-input);
+  color: var(--accent-1);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.chat-suggestion-chip:hover {
+  border-color: var(--accent-1);
+  transform: translateY(-2px);
+}
+
 .chat-panel-input {
   display: flex;
   align-items: center;

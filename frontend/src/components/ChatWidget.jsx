@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { getAssistantReply } from "../utils/assistantReplies";
+import { getAssistantReply, SUGGESTED_QUESTIONS } from "../utils/assistantReplies";
 import { IconChat, IconSend, IconSparkle, IconXCircle } from "./Icons";
 
 const GREETING = "Hi! I'm the RelaySupport Assistant. Ask me how to submit a complaint, track a ticket, leave a review, or anything else about using this app.";
@@ -17,9 +17,7 @@ export default function ChatWidget() {
     }
   }, [messages, isTyping]);
 
-  const handleSend = (e) => {
-    e.preventDefault();
-    const text = input.trim();
+  const sendText = (text) => {
     if (!text || isTyping) return;
 
     setMessages((prev) => [...prev, { role: "user", text }]);
@@ -34,6 +32,11 @@ export default function ChatWidget() {
       setMessages((prev) => [...prev, { role: "bot", text: getAssistantReply(text) }]);
       setIsTyping(false);
     }, delay);
+  };
+
+  const handleSend = (e) => {
+    e.preventDefault();
+    sendText(input.trim());
   };
 
   return (
@@ -63,6 +66,16 @@ export default function ChatWidget() {
               </div>
             )}
           </div>
+
+          {!isTyping && (
+            <div className="chat-suggestions">
+              {SUGGESTED_QUESTIONS.map((q) => (
+                <button type="button" key={q} className="chat-suggestion-chip" onClick={() => sendText(q)}>
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
 
           <form className="chat-panel-input" onSubmit={handleSend}>
             <input
