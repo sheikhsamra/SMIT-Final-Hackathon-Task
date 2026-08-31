@@ -2,11 +2,12 @@ import { lazy, Suspense, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import { WarningsProvider } from "./context/WarningsContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
 import ChatWidget from "./components/ChatWidget";
-import WarningAlert from "./components/WarningAlert";
+import WarningsModal from "./components/WarningsModal";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 
@@ -41,79 +42,81 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <BrowserRouter>
-          <Navbar onOpenAuth={handleOpenAuth} />
-          <main className="main-content">
-            <Suspense fallback={<RouteFallback />}>
-              <Routes>
-                <Route path="/" element={<Home onOpenAuth={handleOpenAuth} />} />
-                <Route path="/about" element={<About onOpenAuth={handleOpenAuth} />} />
-                <Route path="/faq" element={<FAQ onOpenAuth={handleOpenAuth} />} />
-                <Route path="/privacy" element={<Privacy />} />
-                <Route path="/services" element={<Services onOpenAuth={handleOpenAuth} />} />
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/tickets/new"
-                  element={
-                    <ProtectedRoute roles={["customer"]}>
-                      <NewTicket />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/tickets"
-                  element={
-                    <ProtectedRoute roles={["customer"]}>
-                      <MyTickets />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/tickets/:id"
-                  element={
-                    <ProtectedRoute>
-                      <TicketDetail />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/worker"
-                  element={
-                    <ProtectedRoute roles={["worker"]}>
-                      <WorkerDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute roles={["admin"]}>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </Suspense>
-          </main>
-          <Footer />
+        <WarningsProvider>
+          <BrowserRouter>
+            <Navbar onOpenAuth={handleOpenAuth} />
+            <main className="main-content">
+              <Suspense fallback={<RouteFallback />}>
+                <Routes>
+                  <Route path="/" element={<Home onOpenAuth={handleOpenAuth} />} />
+                  <Route path="/about" element={<About onOpenAuth={handleOpenAuth} />} />
+                  <Route path="/faq" element={<FAQ onOpenAuth={handleOpenAuth} />} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/services" element={<Services onOpenAuth={handleOpenAuth} />} />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/tickets/new"
+                    element={
+                      <ProtectedRoute roles={["customer"]}>
+                        <NewTicket />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/tickets"
+                    element={
+                      <ProtectedRoute roles={["customer"]}>
+                        <MyTickets />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/tickets/:id"
+                    element={
+                      <ProtectedRoute>
+                        <TicketDetail />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/worker"
+                    element={
+                      <ProtectedRoute roles={["worker"]}>
+                        <WorkerDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute roles={["admin"]}>
+                        <AdminDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </Suspense>
+            </main>
+            <Footer />
 
-          {/* Global Blur Backdrop Popup Modal */}
-          <AuthModal
-            isOpen={isAuthOpen}
-            onClose={() => setIsAuthOpen(false)}
-            initialMode={authMode}
-          />
+            {/* Global Blur Backdrop Popup Modal */}
+            <AuthModal
+              isOpen={isAuthOpen}
+              onClose={() => setIsAuthOpen(false)}
+              initialMode={authMode}
+            />
 
-          <ChatWidget />
-          <WarningAlert />
-        </BrowserRouter>
+            <ChatWidget />
+            <WarningsModal />
+          </BrowserRouter>
+        </WarningsProvider>
       </AuthProvider>
     </ThemeProvider>
   );

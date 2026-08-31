@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAdminOverview, getAdminUsers, blockUser, unblockUser, warnUser } from "../utils/admin";
+import { getAdminOverview, getAdminUsers, getAdminWarnings, blockUser, unblockUser, warnUser } from "../utils/admin";
 import DonutChart from "../components/DonutChart";
 import { IconUsers, IconUser, IconBriefcase, IconShield, IconAlertTriangle } from "../components/Icons";
 
@@ -24,6 +24,7 @@ const PRIORITY_COLORS = {
 export default function AdminDashboard() {
   const [overview, setOverview] = useState(null);
   const [users, setUsers] = useState(null);
+  const [warnings, setWarnings] = useState(null);
   const [error, setError] = useState("");
   const [roleFilter, setRoleFilter] = useState("All");
   const [actionLoadingId, setActionLoadingId] = useState(null);
@@ -34,11 +35,13 @@ export default function AdminDashboard() {
   const [warnError, setWarnError] = useState("");
 
   const loadUsers = () => getAdminUsers().then(setUsers).catch(() => {});
+  const loadWarnings = () => getAdminWarnings().then(setWarnings).catch(() => {});
 
   useEffect(() => {
     const load = () => {
       getAdminOverview().then(setOverview).catch((err) => setError(err.response?.data?.message || "Could not load overview."));
       loadUsers();
+      loadWarnings();
     };
     load();
     const interval = setInterval(load, 8000);
@@ -93,6 +96,7 @@ export default function AdminDashboard() {
     try {
       await warnUser(warnTarget._id, warnMessage.trim());
       setWarnTarget(null);
+      loadWarnings();
     } catch (err) {
       setWarnError(err.response?.data?.message || "Could not send the warning.");
     } finally {
@@ -270,6 +274,33 @@ export default function AdminDashboard() {
             </div>
           )}
 
+          <h2 className="section-title">Warning History</h2>
+          {warnings && warnings.length === 0 && (
+            <div className="empty-state">
+              <span className="empty-state-icon">✅</span>
+              <p>No warnings have been sent yet.</p>
+            </div>
+          )}
+
+          {warnings && warnings.length > 0 && (
+            <div className="admin-warning-list">
+              {warnings.map((w) => (
+                <div className="admin-warning-row" key={w._id}>
+                  <span className="admin-warning-icon"><IconAlertTriangle /></span>
+                  <div className="admin-warning-body">
+                    <div className="admin-warning-top">
+                      <span className="admin-warning-recipient">
+                        {w.user?.name || "Deleted user"}
+                        {w.user?.email && <span className="admin-user-email"> · {w.user.email}</span>}
+                      </span>
+                      <span className="admin-warning-time">{new Date(w.createdAt).toLocaleString()}</span>
+                    </div>
+                    <p className="admin-warning-message">{w.message}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </>
       )}
 

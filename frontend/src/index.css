@@ -2204,6 +2204,75 @@ body::after {
   }
 }
 
+.admin-warning-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 18px 0 40px;
+}
+
+.admin-warning-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--bg-card);
+  border: 1px solid rgba(var(--priority-high-rgb), 0.25);
+  border-left: 3px solid var(--priority-high);
+  border-radius: 14px;
+  padding: 16px 20px;
+  animation: fade-in-up 0.3s ease-out both;
+}
+
+.admin-warning-icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--priority-high-rgb), 0.14);
+  color: var(--priority-high);
+}
+
+.admin-warning-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.admin-warning-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-warning-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.admin-warning-recipient {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.admin-warning-time {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+}
+
+.admin-warning-message {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
 @media (max-width: 640px) {
   .admin-user-row {
     flex-wrap: wrap;
@@ -2711,6 +2780,58 @@ body::after {
 
 .warn-modal-card.recipient .btn-primary {
   width: 100%;
+}
+
+.warnings-empty {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.warnings-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 4px 0 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.warnings-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.warnings-list::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
+}
+
+.warning-item {
+  text-align: left;
+  background: rgba(var(--priority-high-rgb), 0.06);
+  border: 1px solid rgba(var(--priority-high-rgb), 0.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.warning-item.unread {
+  border-color: var(--priority-high);
+  background: rgba(var(--priority-high-rgb), 0.1);
+}
+
+.warning-item p {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.55;
+  margin-bottom: 6px;
+}
+
+.warning-time {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .modal-content .auth-page {

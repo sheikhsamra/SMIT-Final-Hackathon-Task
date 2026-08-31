@@ -140,4 +140,17 @@ router.post("/users/:id/warn", protect, restrictTo("admin"), async (req, res) =>
   }
 });
 
+// @route  GET /api/admin/warnings  (admin-only — every warning ever sent, newest first)
+router.get("/warnings", protect, restrictTo("admin"), async (req, res) => {
+  try {
+    const warnings = await Notification.find({ type: "warning" })
+      .populate("user", "name email role")
+      .sort({ createdAt: -1 });
+
+    res.json(warnings);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 export default router;

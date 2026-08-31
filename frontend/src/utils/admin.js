@@ -24,3 +24,8 @@ export const warnUser = async (id, message) => {
   const { data } = await api.post(`/admin/users/${id}/warn`, { message });
   return data;
 };
+
+export const getAdminWarnings = async () => {
+  const { data } = await api.get("/admin/warnings");
+  return data;
+};

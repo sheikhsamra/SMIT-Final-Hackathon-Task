@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from "../utils/notifications";
+import { useWarnings } from "../context/WarningsContext";
 import { IconBell, IconInbox, IconCheckCircle, IconXCircle, IconSparkle, IconAlertTriangle } from "./Icons";
 
 const TYPE_META = {
@@ -27,6 +28,7 @@ export default function NotificationBell() {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef(null);
   const navigate = useNavigate();
+  const { open: openWarnings } = useWarnings();
 
   useEffect(() => {
     const load = () => getNotifications().then(setNotifications).catch(() => {});
@@ -51,8 +53,12 @@ export default function NotificationBell() {
       markNotificationRead(n._id).catch(() => {});
       setNotifications((prev) => prev.map((x) => (x._id === n._id ? { ...x, read: true } : x)));
     }
-    // Account-level notifications (e.g. an admin warning) aren't tied to a
-    // ticket, so there's nowhere to navigate.
+    // A warning isn't tied to a ticket — open the "My Warnings" popup
+    // instead of trying to navigate anywhere.
+    if (n.type === "warning") {
+      openWarnings();
+      return;
+    }
     if (n.ticket) navigate(`/tickets/${n.ticket}`);
   };
 
