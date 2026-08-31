@@ -183,12 +183,18 @@ body::after {
   top: 0;
   z-index: 100;
   transition: all 0.3s ease;
-  animation: slide-down 0.5s ease-out both;
+  /* Opacity-only, deliberately — a translateY-based animation resolves to
+     a lingering (non-"none") transform once fill-mode: both holds the
+     final keyframe, and a transform on a position: sticky element (this
+     one also has backdrop-filter, another containing-block trigger) is a
+     known combo for sticky elements rendering shifted/clipped instead of
+     pinned correctly. Same root cause as the earlier .main-content fix. */
+  animation: slide-down-fade 0.5s ease-out both;
 }
 
-@keyframes slide-down {
-  from { opacity: 0; transform: translateY(-100%); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes slide-down-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .navbar-brand {
@@ -735,6 +741,12 @@ body::after {
 
 .hero-page {
   position: relative;
+  /* .hero-bg-blobs deliberately extends past this box's left/right edges
+     (inset uses a negative %) for the decorative blobs to bleed nicely —
+     but with nothing clipping it, that box genuinely widened the whole
+     document's layout, shifting the entire page (navbar included) left.
+     Only this page has the blobs, which is why only Home was affected. */
+  overflow: hidden;
 }
 
 .hero-bg-blobs {
