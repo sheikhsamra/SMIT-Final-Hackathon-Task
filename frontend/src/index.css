@@ -2715,8 +2715,12 @@ body::after {
   display: flex;
   justify-content: center;
   align-items: center;
+  /* If the modal's content is taller than the viewport, centering alone
+     clips it top and bottom with no way to reach the rest — scrolling the
+     overlay itself keeps every bit of a tall modal reachable. */
+  overflow-y: auto;
   z-index: 1000;
-  padding: 20px;
+  padding: 40px 20px;
   animation: modal-fade-in 0.3s ease-out;
 }
 
